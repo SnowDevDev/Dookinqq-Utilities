@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "snow-utils",
+  "version": "${version}",
+  "name": "Snow Utils",
+  "description": "Ching & Chong",
+  "authors": [
+    "StrayxV"
+  ],
+  "icon": "assets/template/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "meteor": [
+      "com.example.addon.AddonTemplate"
+    ]
+  },
+  "mixins": [
+    "addon-template.mixins.json"
+  ],
+  "custom": {
+    "meteor-client:color": "224,224,255"
+  },
+  "depends": {
+    "java": ">=21",
+    "minecraft": ["${mc_version}"],
+    "meteor-client": "*"
+  }
+}
