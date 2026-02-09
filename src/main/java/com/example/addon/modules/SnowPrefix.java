@@ -1,6 +1,7 @@
 package com.example.addon.modules;
 
 import com.example.addon.AddonTemplate;
+import com.example.addon.utils.chatUtils.ChatUtilsHelper;
 import meteordevelopment.meteorclient.settings.ColorSetting;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
@@ -10,7 +11,7 @@ import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 
 public class SnowPrefix extends Module {
     public SnowPrefix() {
-        super(AddonTemplate.CATEGORY, "Snow Prefix", "if you turn ts off ur gay");
+        super(AddonTemplate.CATEGORY, "Snow Prefix", "Customize the [Meteor] chat prefix and module colors.");
     }
 
     private final SettingGroup sgMain = settings.createGroup("Main Prefix");
@@ -18,8 +19,8 @@ public class SnowPrefix extends Module {
 
     private final Setting<String> prefix = sgMain.add(new StringSetting.Builder()
         .name("prefix-text")
-        .description("no matter what you type in except the default thing ill kill u")
-        .defaultValue("Snow-Client")
+        .description("The main prefix text (e.g., 'Meteor', 'MyAddon')")
+        .defaultValue("Snow")
         .onChanged(this::updateMainPrefix)
         .build()
     );
@@ -40,32 +41,40 @@ public class SnowPrefix extends Module {
         .build()
     );
 
-@Override
-public void onActivate() {
-    super.onActivate();
-    applyPrefix();
-}
+    @Override
+    public void onActivate() {
+        super.onActivate();
+        updateMainPrefix();
+        updateModuleColor();
+    }
 
-@Override
-public void onDeactivate() {
-    if (!isActive()) toggle();
-}
+    @Override
+    public void onDeactivate() {
+        super.onDeactivate();
+        ChatUtilsHelper.resetToDefault();
+    }
 
-private void updateMainPrefix(String newValue) {
-    applyPrefix();
-}
+    private void updateMainPrefix() {
+        if (isActive()) {
+            ChatUtilsHelper.setCustomPrefix(prefix.get(), mainColor.get().getPacked());
+        }
+    }
 
-private void updateMainPrefix(SettingColor newValue) {
-    applyPrefix();
-}
+    private void updateMainPrefix(String newValue) {
+        updateMainPrefix();
+    }
 
-private void updateModuleColor(SettingColor newValue) {
-    applyPrefix();
-}
+    private void updateMainPrefix(SettingColor newValue) {
+        updateMainPrefix();
+    }
 
-private void applyPrefix() {
-    String text = prefix.get();
-    SettingColor main = mainColor.get();
-    SettingColor module = moduleColor.get();
-}
+    private void updateModuleColor() {
+        if (isActive()) {
+            ChatUtilsHelper.setCustomModulePrefixColor(moduleColor.get().getPacked());
+        }
+    }
+
+    private void updateModuleColor(SettingColor newValue) {
+        updateModuleColor();
+    }
 }
