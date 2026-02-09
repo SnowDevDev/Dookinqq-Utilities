@@ -1,4 +1,4 @@
-package com.example.addon.Utils;
+package com.example.addon.utils;
 
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
