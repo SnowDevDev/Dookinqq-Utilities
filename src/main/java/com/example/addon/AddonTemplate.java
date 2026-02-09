@@ -9,7 +9,7 @@ import com.example.addon.modules.SnowFetch;
 import com.example.addon.modules.SnowMIK;
 import com.example.addon.modules.SnowRIK;
 import com.example.addon.modules.SnowBaseESP;
-import com.example.addon.modules.SnowPrefix;
+import com.example.addon.modules.SnowNJD;
 import com.mojang.logging.LogUtils;
 import meteordevelopment.meteorclient.addons.GithubRepo;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
@@ -36,7 +36,7 @@ public class AddonTemplate extends MeteorAddon {
 		Modules.get().add(new SnowMIK());
 		Modules.get().add(new SnowRIK());
 		Modules.get().add(new SnowBaseESP());
-		Modules.get().add(new SnowPrefix());
+		Modules.get().add(new SnowNJD());
 
 
         // HUD
