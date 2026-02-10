@@ -45,7 +45,7 @@ public class WSnowModule extends WPressable implements MeteorWidget {
 
         if (titleWidth == 0) titleWidth = theme.textWidth(module.title);
 
-        width = pad + titleWidth + pad + 60;
+        width = pad + titleWidth + pad + 65;
         height = (pad + theme.textHeight() + pad) * 1.1;
     }
 
