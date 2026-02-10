@@ -1,21 +1,14 @@
 package com.example.addon;
 
+import com.example.addon.themes.SnowGuiTheme;
 import com.example.addon.hud.SnowWatermark;
 import com.example.addon.hud.SnowLogger;
-import com.example.addon.modules.SnowAscend;
-import com.example.addon.modules.SnowCrash;
-import com.example.addon.modules.SnowDupe;
-import com.example.addon.modules.SnowFetch;
-import com.example.addon.modules.SnowMIK;
-import com.example.addon.modules.SnowRIK;
-import com.example.addon.modules.SnowBaseESP;
-import com.example.addon.modules.SnowNJD;
-import com.example.addon.modules.SnowDM;
-import com.example.addon.modules.SnowFatty;
-import com.example.addon.modules.SnowSniper;
+import com.example.addon.modules.*;
 import com.mojang.logging.LogUtils;
+import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.addons.GithubRepo;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
+import meteordevelopment.meteorclient.gui.GuiThemes;
 import meteordevelopment.meteorclient.systems.hud.Hud;
 import meteordevelopment.meteorclient.systems.hud.HudGroup;
 import meteordevelopment.meteorclient.systems.modules.Category;
@@ -31,24 +24,31 @@ public class AddonTemplate extends MeteorAddon {
     public void onInitialize() {
         LOG.info("succesfully winged the ding");
 
+        MeteorClient.EVENT_BUS.subscribe(this);
+
         // Modules
         Modules.get().add(new SnowAscend());
-		Modules.get().add(new SnowCrash());
-		Modules.get().add(new SnowDupe());
-		Modules.get().add(new SnowFetch());
-		Modules.get().add(new SnowMIK());
-		Modules.get().add(new SnowRIK());
-		Modules.get().add(new SnowBaseESP());
-		Modules.get().add(new SnowNJD());
-		Modules.get().add(new SnowDM());
-		Modules.get().add(new SnowFatty());
-		Modules.get().add(new SnowSniper());
-
+        Modules.get().add(new SnowCrash());
+        Modules.get().add(new SnowDupe());
+        Modules.get().add(new SnowFetch());
+        Modules.get().add(new SnowMIK());
+        Modules.get().add(new SnowRIK());
+        Modules.get().add(new SnowBaseESP());
+        Modules.get().add(new SnowNJD());
+        Modules.get().add(new SnowDM());
+        Modules.get().add(new SnowFatty());
+        Modules.get().add(new SnowSniper());
+        Modules.get().add(new SnowEncryption());
+        Modules.get().add(SnowIRC.INSTANCE);
 
         // HUD
         Hud.get().register(SnowWatermark.INFO);
-		Hud.get().register(SnowLogger.INFO);
+        Hud.get().register(SnowLogger.INFO);
+		
+		// Themes
+		GuiThemes.add(new SnowGuiTheme());
     }
+
 
     @Override
     public void onRegisterCategories() {
