@@ -66,14 +66,15 @@ public class WSnowModule extends WPressable implements MeteorWidget {
         animationProgress2 += delta * 6 * (module.isActive() ? 1 : -1);
         animationProgress2 = MathHelper.clamp(animationProgress2, 0, 1);
 
-        if (animationProgress1 > 0) {
-            renderer.quad(x, y, width * animationProgress1, height, theme.moduleBackground.get());
-        }
+        if (animationProgress1 > 0) { renderer.quad(x, y, width * animationProgress1, height, theme.moduleBackground.get()); }
         if (animationProgress2 > 0) {
-            renderer.quad(x, y + height * (1 - animationProgress2), theme.scale(2), height * animationProgress2, theme.placeholderColor.get());
+            renderer.quad(x, y,
+            theme.scale(2),
+            height,
+            theme.placeholderColor.get());
         }
 
-        double x = this.x + pad;
+        double x = this.x + pad + theme.scale(6); // adjust 6 to taste
         double w = width - pad * 2;
 
         if (theme.moduleAlignment.get() == AlignmentX.Center) {
@@ -83,6 +84,10 @@ public class WSnowModule extends WPressable implements MeteorWidget {
             x += w - titleWidth;
         }
 
-        renderer.text(module.title, x, y + pad, module.isActive() ? theme.textColor.get() : theme.textSecondaryColor.get(), false);
+        double textY = y + (height - theme.textHeight()) / 2;
+renderer.text(module.title, x, textY,
+    module.isActive() ? theme.textColor.get() : theme.textSecondaryColor.get(),
+    false
+);
     }
 }
