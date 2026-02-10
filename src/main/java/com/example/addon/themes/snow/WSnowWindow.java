@@ -15,12 +15,20 @@ public class WSnowWindow extends WWindow implements MeteorWidget {
         return new WMeteorHeader(icon);
     }
 
-    @Override
-    protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) {
-        if (expanded || animProgress > 0) {
-            renderer.quad(x + 5, y + header.height, width - 10, height - header.height, theme().backgroundColor.get());
-        }
+@Override
+protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) {
+    if (expanded || animProgress > 0) {
+        double bodyHeight = (height - header.height) / 1.5;
+
+        renderer.quad(
+            x + 5,
+            y + header.height,
+            width - 10,
+            bodyHeight,
+            theme().backgroundColor.get()
+        );
     }
+}
 
     private class WMeteorHeader extends WHeader {
         public WMeteorHeader(WWidget icon) {
