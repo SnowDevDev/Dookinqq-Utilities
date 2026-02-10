@@ -19,15 +19,15 @@ public class SnowAscend extends Module {
         super(AddonTemplate.CATEGORY, "Snow Ascend", "car car go");
     }
 
-    private final Setting<Double> flySpeed = sgGeneral.add(new DoubleSetting.Builder().name("flyspeed").description("the speed you fly").defaultValue(0.05d).range(0.0d, 5.0d).build());
+    private final Setting<Double> flySpeed = sgGeneral.add(new DoubleSetting.Builder().name("flyspeed").description("the speed you fly").defaultValue(5.0d).range(0.0d, 5.0d).build());
     private final Setting<Double> TpUp = sgGeneral.add(new DoubleSetting.Builder().name("TpUp").description("amount of block you get teleported up on activate").defaultValue(0.2).range(0, 3).build());
     private final Setting<Integer> goDownTime = sgGeneral.add(new IntSetting.Builder().name("goDownTime").description("time(ticks) to go down").defaultValue(60).range(1,800).build());
-    private final Setting<Boolean> antiKick = sgGeneral.add(new BoolSetting.Builder().name("anti kick").description("time(ticks) to go down").defaultValue(false).build());
-    private final Setting<Boolean> creativeflight = sgGeneral.add(new BoolSetting.Builder().name("creativeflight").description("switches the flight type").defaultValue(false).build());
-    private final Setting<Boolean> vectorflight = sgGeneral.add(new BoolSetting.Builder().name("vectorflight").description("switches the flight type").defaultValue(true).build());
+    private final Setting<Boolean> antiKick = sgGeneral.add(new BoolSetting.Builder().name("anti kick").description("time(ticks) to go down").defaultValue(true).build());
+    private final Setting<Boolean> creativeflight = sgGeneral.add(new BoolSetting.Builder().name("creativeflight").description("switches the flight type").defaultValue(true).build());
+    private final Setting<Boolean> vectorflight = sgGeneral.add(new BoolSetting.Builder().name("vectorflight").description("switches the flight type").defaultValue(false).build());
 
     int toggle =0;
-    int MAX_SPEED = 3;
+    int MAX_SPEED = 2147483647;
     double FALL_SPEED = -0.04;
     double acceleration = 0.1;
 
