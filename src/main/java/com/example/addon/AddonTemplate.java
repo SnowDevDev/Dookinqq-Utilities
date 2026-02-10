@@ -38,6 +38,8 @@ public class AddonTemplate extends MeteorAddon {
         Modules.get().add(new SnowFatty());
         Modules.get().add(new SnowSniper());
         Modules.get().add(new SnowEncryption());
+		Modules.get().add(new SnowAntiOpium());
+		Modules.get().add(new SnowAHB());
         Modules.get().add(SnowIRC.INSTANCE);
 
         // HUD
