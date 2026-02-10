@@ -28,7 +28,7 @@ public class SnowPrefix extends Module {
     private final Setting<SettingColor> mainColor = sgMain.add(new ColorSetting.Builder()
         .name("prefix-color")
         .description("Color of the main prefix")
-        .defaultValue(new SettingColor(224, 224, 255))
+        .defaultValue(new SettingColor(32, 32, 192))
         .onChanged(this::updateMainPrefix)
         .build()
     );
@@ -36,7 +36,7 @@ public class SnowPrefix extends Module {
     private final Setting<SettingColor> moduleColor = sgModule.add(new ColorSetting.Builder()
         .name("module-color")
         .description("Color of module/class name prefixes (e.g., [AutoTotem], [Flight])")
-        .defaultValue(new SettingColor(224, 224, 255))
+        .defaultValue(new SettingColor(255, 255, 255))
         .onChanged(this::updateModuleColor)
         .build()
     );

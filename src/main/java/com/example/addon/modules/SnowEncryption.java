@@ -71,7 +71,7 @@ public class SnowEncryption extends Module {
 
     private final Setting<String> encryptionKey = sgGeneral.add(new StringSetting.Builder()
             .name("encryption-key")
-            .defaultValue("Change This")
+            .defaultValue("poggot")
             .build());
 
     private final Setting<Boolean> encryptAll = sgGeneral.add(new BoolSetting.Builder()
