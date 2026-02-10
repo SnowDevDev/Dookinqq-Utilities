@@ -1,5 +1,3 @@
-# Skiddadle
+# A Greek Tragedy
 
-My metewhore client addon for SnowcapSMP on minehut.
-Many of the code is skidded from TrouserStreak, LiquidBounce, Master Addon, Numbyhack and DU addon.
-Enjoy it!
+Skidded addon i made to assist u in (anarchy) servers.
