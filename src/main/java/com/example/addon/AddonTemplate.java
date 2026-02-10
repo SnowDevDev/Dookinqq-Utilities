@@ -1,8 +1,7 @@
 package com.example.addon;
 
 import com.example.addon.themes.SnowGuiTheme;
-import com.example.addon.hud.SnowWatermark;
-import com.example.addon.hud.SnowLogger;
+import com.example.addon.hud.*;
 import com.example.addon.modules.*;
 import com.mojang.logging.LogUtils;
 import meteordevelopment.meteorclient.MeteorClient;
