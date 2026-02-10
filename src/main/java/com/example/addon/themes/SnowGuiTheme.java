@@ -30,7 +30,7 @@ public class SnowGuiTheme extends MeteorGuiTheme {
             accentColor.set(new SettingColor(new Color(192, 32, 32, 192)));
             placeholderColor.set(new SettingColor(new Color(192, 32, 32, 255)));
             moduleBackground.set(new SettingColor(new Color(72, 12, 12, 108)));
-            backgroundColor.get().set(new SettingColor(new Color(48, 8, 48, 96)));
+            backgroundColor.get().set(new SettingColor(new Color(48, 8, 8, 96)));
         }
     }
 }
