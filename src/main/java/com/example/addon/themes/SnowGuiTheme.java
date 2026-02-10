@@ -27,10 +27,10 @@ public class SnowGuiTheme extends MeteorGuiTheme {
         settingsFactory = new DefaultSettingsWidgetFactory(this);
         if (placeholderColor.get().r != 33) {
             moduleAlignment.set(AlignmentX.Left);
-            accentColor.set(new SettingColor(new Color(32, 32, 192, 192)));
-            placeholderColor.set(new SettingColor(new Color(32, 32, 192, 255)));
-            moduleBackground.set(new SettingColor(new Color(10, 10, 10, 108)));
-            backgroundColor.get().set(new SettingColor(new Color(8, 8, 48, 96)));
+            accentColor.set(new SettingColor(new Color(192, 32, 32, 192)));
+            placeholderColor.set(new SettingColor(new Color(192, 32, 32, 255)));
+            moduleBackground.set(new SettingColor(new Color(72, 12, 12, 108)));
+            backgroundColor.get().set(new SettingColor(new Color(48, 8, 48, 96)));
         }
     }
 }
