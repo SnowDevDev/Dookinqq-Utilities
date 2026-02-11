@@ -21,7 +21,7 @@ public class SnowAHB extends Module {
     private final Setting<Boolean> mining = sgGeneral.add(new BoolSetting.Builder()
         .name("mining")
         .description("Prevent hunger depletion while mining.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
 
