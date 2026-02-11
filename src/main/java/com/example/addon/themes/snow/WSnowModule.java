@@ -16,9 +16,7 @@ public class WSnowModule extends WPressable implements MeteorWidget {
     private final Module module;
 
     private double titleWidth;
-
     private double animationProgress1;
-
     private double animationProgress2;
 
     public WSnowModule(Module module) {
@@ -28,9 +26,6 @@ public class WSnowModule extends WPressable implements MeteorWidget {
         if (module.isActive()) {
             animationProgress1 = 1;
             animationProgress2 = 1;
-        } else {
-            animationProgress1 = 0;
-            animationProgress2 = 0;
         }
     }
 
@@ -57,7 +52,7 @@ public class WSnowModule extends WPressable implements MeteorWidget {
 
     @Override
     protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) {
-        MeteorGuiTheme theme = theme();
+        MeteorGuiTheme theme = (MeteorGuiTheme) this.theme;
         double pad = pad();
 
         animationProgress1 += delta * 4 * ((module.isActive() || mouseOver) ? 1 : -1);
@@ -66,28 +61,32 @@ public class WSnowModule extends WPressable implements MeteorWidget {
         animationProgress2 += delta * 6 * (module.isActive() ? 1 : -1);
         animationProgress2 = MathHelper.clamp(animationProgress2, 0, 1);
 
-        if (animationProgress1 > 0) { renderer.quad(x, y, width * animationProgress1, height, theme.moduleBackground.get()); }
-        if (animationProgress2 > 0) {
-            renderer.quad(x, y,
-            theme.scale(2),
-            height,
-            theme.placeholderColor.get());
+        if (animationProgress1 > 0) {
+            renderer.quad(x, y, width * animationProgress1, height, theme.moduleBackground.get());
         }
 
-        double x = this.x + pad + theme.scale(6); // adjust 6 to taste
+        if (animationProgress2 > 0) {
+            renderer.quad(x, y, theme.scale(2), height, theme.placeholderColor.get());
+        }
+
+        double textX = this.x + pad + theme.scale(6);
         double w = width - pad * 2;
 
         if (theme.moduleAlignment.get() == AlignmentX.Center) {
-            x += w / 2 - titleWidth / 2;
+            textX += w / 2 - titleWidth / 2;
         }
         else if (theme.moduleAlignment.get() == AlignmentX.Right) {
-            x += w - titleWidth;
+            textX += w - titleWidth;
         }
 
         double textY = y + (height - theme.textHeight()) / 2;
-renderer.text(module.title, x, textY,
-    module.isActive() ? theme.textColor.get() : theme.textSecondaryColor.get(),
-    false
-);
+
+        renderer.text(
+            module.title,
+            textX,
+            textY,
+            module.isActive() ? theme.textColor.get() : theme.textSecondaryColor.get(),
+            false
+        );
     }
 }

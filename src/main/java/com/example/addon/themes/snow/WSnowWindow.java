@@ -1,1 +1,47 @@
-package com.example.addon.themes.snow; import meteordevelopment.meteorclient.gui.renderer.GuiRenderer; import meteordevelopment.meteorclient.gui.themes.meteor.MeteorWidget; import meteordevelopment.meteorclient.gui.widgets.WWidget; import meteordevelopment.meteorclient.gui.widgets.containers.WWindow; public class WSnowWindow extends WWindow implements MeteorWidget { public WSnowWindow(WWidget icon, String title) { super(icon, title); } @Override protected WHeader header(WWidget icon) { return new WMeteorHeader(icon); } @Override protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) { if (expanded || animProgress > 0) { renderer.quad(x + 5, y + header.height, width - 10, height - header.height, theme().backgroundColor.get()); } } private class WMeteorHeader extends WHeader { public WMeteorHeader(WWidget icon) { super(icon); } @Override protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) { renderer.quad(this, theme().accentColor.get()); } } }
+package com.example.addon.themes.snow;
+
+import meteordevelopment.meteorclient.gui.renderer.GuiRenderer;
+import meteordevelopment.meteorclient.gui.themes.meteor.MeteorGuiTheme;
+import meteordevelopment.meteorclient.gui.themes.meteor.MeteorWidget;
+import meteordevelopment.meteorclient.gui.widgets.WWidget;
+import meteordevelopment.meteorclient.gui.widgets.containers.WWindow;
+
+public class WSnowWindow extends WWindow implements MeteorWidget {
+
+    public WSnowWindow(WWidget icon, String title) {
+        super(icon, title);
+    }
+
+    @Override
+    protected WHeader header(WWidget icon) {
+        return new WMeteorHeader(icon);
+    }
+
+    @Override
+    protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) {
+        MeteorGuiTheme theme = (MeteorGuiTheme) this.theme;
+
+        if (expanded || animProgress > 0) {
+            renderer.quad(
+                x + 5,
+                y + header.height,
+                width - 10,
+                height - header.height,
+                theme.backgroundColor.get()
+            );
+        }
+    }
+
+    private class WMeteorHeader extends WHeader {
+
+        public WMeteorHeader(WWidget icon) {
+            super(icon);
+        }
+
+        @Override
+        protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) {
+            MeteorGuiTheme theme = (MeteorGuiTheme) WSnowWindow.this.theme;
+            renderer.quad(this, theme.accentColor.get());
+        }
+    }
+}
