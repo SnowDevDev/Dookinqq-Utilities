@@ -13,24 +13,32 @@ import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import java.awt.*;
 
 public class SnowGuiTheme extends MeteorGuiTheme {
+
     @Override
     public WWidget module(Module module) {
         return w(new WSnowModule(module));
     }
+
     @Override
     public WWindow window(WWidget icon, String title) {
         return w(new WSnowWindow(icon, title));
     }
 
-
     public SnowGuiTheme() {
         settingsFactory = new DefaultSettingsWidgetFactory(this);
+
         if (placeholderColor.get().r != 33) {
             moduleAlignment.set(AlignmentX.Left);
-            accentColor.set(new SettingColor(new Color(192, 32, 192, 192)));
-            placeholderColor.set(new SettingColor(new Color(192, 32, 192, 255)));
-            moduleBackground.set(new SettingColor(new Color(72, 12, 72, 108)));
-            backgroundColor.get().set(new SettingColor(new Color(48, 8, 48, 96)));
+
+            // Accent & backgrounds
+            accentColor.set(new SettingColor(new Color(0, 128, 255, 192)));
+            placeholderColor.set(new SettingColor(new Color(0, 128, 255, 255)));
+            moduleBackground.set(new SettingColor(new Color(0, 64, 128, 108)));
+            backgroundColor.get().set(new SettingColor(new Color(0, 64, 128, 96)));
+
+            // Text colors
+            textColor.set(new SettingColor(new Color(255, 255, 255, 255)));          // Main text
+            textSecondaryColor.set(new SettingColor(new Color(192, 192, 192, 255))); // Secondary text
         }
     }
 }
