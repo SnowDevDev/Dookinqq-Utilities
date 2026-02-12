@@ -55,6 +55,9 @@ public class AddonTemplate extends MeteorAddon {
         Modules.get().add(new SnowNameTags());
         Modules.get().add(new SnowLagFinder());
         Modules.get().add(new SnowSwap());
+        Modules.get().add(new SnowGod());
+        Modules.get().add(new SnowGhost());
+        Modules.get().add(new SnowSpunge());
         Modules.get().add(SnowIRC.INSTANCE);
 
         // HUD
