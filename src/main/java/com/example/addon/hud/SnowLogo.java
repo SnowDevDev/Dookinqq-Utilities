@@ -32,7 +32,7 @@ public class SnowLogo extends HudElement {
         .build()
     );
 
-    private final Identifier logo = Identifier.of(AddonTemplate.MOD_ID, "icon.png");
+    private final Identifier logo = Identifier.of(AddonTemplate.MOD_ID, "logo.png");
 
     @Override
     public void render(HudRenderer renderer) {

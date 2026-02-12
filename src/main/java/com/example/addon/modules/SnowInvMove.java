@@ -30,7 +30,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class SnowInvMove extends Module {
 	public SnowInvMove() {
-		super(Categories.Movement, "Snow Inventory Move", "Move in inventories.");
+		super(AddonTemplate.CATEGORY, "Snow Inventory Move", "Move in inventories.");
 	}
 	public enum Screens {
 		GUI,
