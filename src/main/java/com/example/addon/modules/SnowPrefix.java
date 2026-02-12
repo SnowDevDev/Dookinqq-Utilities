@@ -28,7 +28,7 @@ public class SnowPrefix extends Module {
     private final Setting<SettingColor> mainColor = sgMain.add(new ColorSetting.Builder()
         .name("prefix-color")
         .description("Color of the main prefix")
-        .defaultValue(new SettingColor(255, 128, 64))
+        .defaultValue(new SettingColor(224, 56, 112))
         .onChanged(this::updateMainPrefix)
         .build()
     );
