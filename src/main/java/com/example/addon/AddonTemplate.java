@@ -15,6 +15,7 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import org.slf4j.Logger;
 
 public class AddonTemplate extends MeteorAddon {
+    public static final String MOD_ID = "snow-utils";
     public static final Logger LOG = LogUtils.getLogger();
     public static final Category CATEGORY = new Category("Snow Utilities");
     public static final HudGroup HUD_GROUP = new HudGroup("Snow Utilities");
@@ -49,11 +50,17 @@ public class AddonTemplate extends MeteorAddon {
 		Modules.get().add(new SnowGFF());
 		Modules.get().add(new SnowTotem());
         Modules.get().add(new SnowNoFall());
+        Modules.get().add(new SnowInvMove());
+        Modules.get().add(new SnowFreeze());
+        Modules.get().add(new SnowNameTags());
+        Modules.get().add(new SnowLagFinder());
+        Modules.get().add(new SnowSwap());
         Modules.get().add(SnowIRC.INSTANCE);
 
         // HUD
         Hud.get().register(SnowWatermark.INFO);
         Hud.get().register(SnowLogger.INFO);
+        Hud.get().register(SnowLogo.INFO);
 		
 		// Themes
 		GuiThemes.add(new SnowGuiTheme());
