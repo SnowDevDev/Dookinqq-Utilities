@@ -50,7 +50,7 @@ public class SnowNameTags extends Module {
     private final List<Entity> entityList = new ArrayList<Entity>();
     private final Setting<Boolean> culling = sgGeneral.add(new BoolSetting.Builder()
         .name("Culling")
-        .defaultValue(false)
+        .defaultValue(true)
         .build()
     );
 

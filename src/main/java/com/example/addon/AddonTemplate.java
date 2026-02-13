@@ -56,7 +56,6 @@ public class AddonTemplate extends MeteorAddon {
         Modules.get().add(new SnowLagFinder());
         Modules.get().add(new SnowSwap());
         Modules.get().add(new SnowGod());
-        Modules.get().add(new SnowGhost());
         Modules.get().add(new SnowSpunge());
         Modules.get().add(new SnowAntiCrash());
         Modules.get().add(new SnowSoundFinder());
@@ -64,10 +63,14 @@ public class AddonTemplate extends MeteorAddon {
         Modules.get().add(new SnowNoPop());
         Modules.get().add(new SnowKicker());
         Modules.get().add(new SnowCaster());
-        Modules.get().add(new SnowPrefix());
         Modules.get().add(new SnowHWB());
         Modules.get().add(new SnowAutoWither());
+        Modules.get().add(new SnowSwing());
         Modules.get().add(SnowIRC.INSTANCE);
+        Modules.get().add(new SnowPrefix());
+        SnowPrefix prefix = new SnowPrefix();
+        Modules.get().add(prefix);
+        prefix.toggle();
 
         // HUD
         Hud.get().register(SnowWatermark.INFO);

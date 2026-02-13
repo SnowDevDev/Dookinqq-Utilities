@@ -33,8 +33,8 @@ public class SnowGuiTheme extends MeteorGuiTheme {
             // Accent & backgrounds
             accentColor.set(new SettingColor(new Color(192, 32, 32, 192)));
             placeholderColor.set(new SettingColor(new Color(192, 32, 32, 255)));
-            moduleBackground.set(new SettingColor(new Color(96, 16, 16, 108)));
-            backgroundColor.get().set(new SettingColor(new Color(144, 24, 24, 96)));
+            moduleBackground.set(new SettingColor(new Color(144, 24, 24, 108)));
+            backgroundColor.get().set(new SettingColor(new Color(96, 16, 16, 96)));
 
             // Text colors
             textColor.set(new SettingColor(new Color(255, 255, 255, 255)));          // Main text
