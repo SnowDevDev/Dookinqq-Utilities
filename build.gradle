@@ -25,6 +25,9 @@ dependencies {
 
     // Extra
     implementation "com.github.luben:zstd-jni:1.5.5-11"
+
+    //Renderer
+    include modImplementation("io.github.0x3c50.renderer:renderer-fabric:1.2.5")
 }
 
 processResources {

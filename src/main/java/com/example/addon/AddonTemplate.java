@@ -58,13 +58,23 @@ public class AddonTemplate extends MeteorAddon {
         Modules.get().add(new SnowGod());
         Modules.get().add(new SnowGhost());
         Modules.get().add(new SnowSpunge());
+        Modules.get().add(new SnowAntiCrash());
+        Modules.get().add(new SnowSoundFinder());
+        Modules.get().add(new SnowMiner());
+        Modules.get().add(new SnowNoPop());
+        Modules.get().add(new SnowKicker());
+        Modules.get().add(new SnowCaster());
         Modules.get().add(SnowIRC.INSTANCE);
 
         // HUD
         Hud.get().register(SnowWatermark.INFO);
         Hud.get().register(SnowLogger.INFO);
         Hud.get().register(SnowLogo.INFO);
-		
+        Hud.get().register(SnowFriendly.INFO);
+        Hud.get().register(SnowFriends.INFO);
+        Hud.get().register(SnowKBH.INFO);
+		Hud.get().register(SnowNotifs.INFO);
+        Hud.get().register(SnowTab.INFO);
 		// Themes
 		GuiThemes.add(new SnowGuiTheme());
     }

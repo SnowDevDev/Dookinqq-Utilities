@@ -10,6 +10,7 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 
 public class SnowPrefix extends Module {
+
     public SnowPrefix() {
         super(AddonTemplate.CATEGORY, "Snow Prefix", "Customize the [Meteor] chat prefix and module colors.");
     }
@@ -21,7 +22,7 @@ public class SnowPrefix extends Module {
         .name("prefix-text")
         .description("The main prefix text (e.g., 'Meteor', 'MyAddon')")
         .defaultValue("Snow")
-        .onChanged(this::updateMainPrefix)
+        .onChanged(value -> updateMainPrefix()) // value not needed, just update
         .build()
     );
 
@@ -29,7 +30,7 @@ public class SnowPrefix extends Module {
         .name("prefix-color")
         .description("Color of the main prefix")
         .defaultValue(new SettingColor(224, 56, 112))
-        .onChanged(this::updateMainPrefix)
+        .onChanged(value -> updateMainPrefix())
         .build()
     );
 
@@ -37,7 +38,7 @@ public class SnowPrefix extends Module {
         .name("module-color")
         .description("Color of module/class name prefixes (e.g., [AutoTotem], [Flight])")
         .defaultValue(new SettingColor(255, 255, 255))
-        .onChanged(this::updateModuleColor)
+        .onChanged(value -> updateModuleColor())
         .build()
     );
 
@@ -60,21 +61,9 @@ public class SnowPrefix extends Module {
         }
     }
 
-    private void updateMainPrefix(String newValue) {
-        updateMainPrefix();
-    }
-
-    private void updateMainPrefix(SettingColor newValue) {
-        updateMainPrefix();
-    }
-
     private void updateModuleColor() {
         if (isActive()) {
             ChatUtilsHelper.setCustomModulePrefixColor(moduleColor.get().getPacked());
         }
-    }
-
-    private void updateModuleColor(SettingColor newValue) {
-        updateModuleColor();
     }
 }
