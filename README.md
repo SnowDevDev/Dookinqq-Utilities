@@ -10,7 +10,7 @@ This project started when i saw the server "SnowCapSMP" on minehut.gg, then it g
 
 ### Credits
 
-Meteor Extras, Walper Rewrite, Meteor Rejects, LiquidBounce, TrouserStreak, Nami, DU, Master and more!
+Meteor Extras, Walper Rewrite, Meteor Rejects, LiquidBounce, TrouserStreak, Nami, DU, Master, HighwayTools and more!
 
 ### Suggestions / Issues
 
