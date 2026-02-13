@@ -44,7 +44,7 @@ public class SnowFriendly extends HudElement {
     private final Setting<SettingColor> friendColor = sgGeneral.add(new ColorSetting.Builder()
         .name("friend-color")
         .description("Color of friend names.")
-        .defaultValue(new SettingColor(173, 216, 230)) // Light blue
+        .defaultValue(new SettingColor(192, 32, 32)) // Light blue
         .build()
     );
 

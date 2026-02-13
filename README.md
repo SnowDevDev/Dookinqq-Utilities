@@ -1,7 +1,7 @@
 # A Greek Tragedy
 
 Skidded addon i made to assist u in (anarchy) servers.
-While still in early dev, it has more than 40 modules.
+While still in early dev, it has more than 30 modules.
 It also has grim features to assit with BepHax or mioclient.me if i/somebody can port it correctly.
 
 https://discord.gg/kgdDMxPWf9

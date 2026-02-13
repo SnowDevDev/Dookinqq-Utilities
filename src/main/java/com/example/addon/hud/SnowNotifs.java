@@ -34,7 +34,7 @@ public class SnowNotifs extends HudElement {
 
     private final Setting<SettingColor> notificationTextColor = sgGeneral.add(new ColorSetting.Builder()
         .name("Notification Text Color")
-        .defaultValue(new SettingColor(255, 105, 180))
+        .defaultValue(new SettingColor(192, 32, 32))
         .build()
     );
 

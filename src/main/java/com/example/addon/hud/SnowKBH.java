@@ -32,7 +32,7 @@ public class SnowKBH extends HudElement {
     );
     private final Setting<SettingColor> border = sgGeneral.add(new ColorSetting.Builder()
         .name("Border")
-        .defaultValue(new SettingColor(255, 105, 180))
+        .defaultValue(new SettingColor(192, 32, 32))
         .build()
     );
     private final Setting<SettingColor> text = sgGeneral.add(new ColorSetting.Builder()

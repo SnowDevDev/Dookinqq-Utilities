@@ -17,14 +17,14 @@ public class SnowTotem extends Module {
     private final Setting<SettingColor> colorOne = sgGeneral.add(new ColorSetting.Builder()
             .name("color-one")
             .description("The first SnowTotem color to change.")
-            .defaultValue(new SettingColor(224, 56, 112, 128))
+            .defaultValue(new SettingColor(192, 32, 32, 128))
             .build()
     );
 
     private final Setting<SettingColor> colorTwo = sgGeneral.add(new ColorSetting.Builder()
             .name("color-two")
             .description("The second SnowTotem color to change.")
-            .defaultValue(new SettingColor(112, 24, 56, 128))
+            .defaultValue(new SettingColor(96, 16, 16, 128))
             .build()
     );
 

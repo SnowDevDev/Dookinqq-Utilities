@@ -41,11 +41,11 @@ public class SnowWatermark extends HudElement {
 
         // Accent bar (top)
         renderer.quad(x, y, width + 10, 2,
-                new Color(255, 105, 180)); // soft pink accent
+                new Color(192, 32, 32)); // soft pink accent
 
         // Main text (gradient-ish effect)
         renderer.text(clientName, x + 5, y + 3,
-                new Color(255, 105, 180), true);
+                new Color(192, 32, 32), true);
 
         double offset = renderer.textWidth(clientName, true);
 
