@@ -53,7 +53,7 @@ public class SnowSoundFinder extends Module {
     private final Setting<Integer> timeS = sgGeneral.add(new IntSetting.Builder()
             .name("time")
             .description("The time (in ticks) to render the sound.")
-            .defaultValue(60)
+            .defaultValue(15)
             .min(1)
             .sliderMax(200)
             .build()

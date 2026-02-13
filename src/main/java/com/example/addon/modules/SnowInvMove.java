@@ -1,221 +1,210 @@
 package com.example.addon.modules;
 
-import meteordevelopment.meteorclient.MeteorClient;
-import meteordevelopment.meteorclient.events.meteor.KeyEvent;
+import com.example.addon.AddonTemplate;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
-import meteordevelopment.meteorclient.gui.WidgetScreen;
-import meteordevelopment.meteorclient.mixin.CreativeInventoryScreenAccessor;
-import meteordevelopment.meteorclient.mixin.KeyBindingAccessor;
 import meteordevelopment.meteorclient.settings.*;
-import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.Utils;
-import meteordevelopment.meteorclient.utils.misc.input.Input;
-import meteordevelopment.meteorclient.utils.misc.input.KeyAction;
-import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 import meteordevelopment.orbit.EventHandler;
+
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
-import net.minecraft.network.packet.c2s.play.CloseHandledScreenC2SPacket;
-import net.minecraft.util.math.MathHelper;
-import com.example.addon.events.ClickWindowEvent;
-import com.example.addon.AddonTemplate;
+import net.minecraft.network.packet.s2c.play.CloseScreenS2CPacket;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class SnowInvMove extends Module {
-	public SnowInvMove() {
-		super(AddonTemplate.CATEGORY, "Snow Inventory Move", "Move in inventories.");
-	}
-	public enum Screens {
-		GUI,
-		Inventory,
-		Both
-	}
-	public enum Bypass {
-		No_Open_Packet,
-		None;
 
-		@Override
-		public String toString() {
-			return super.toString().replace('_', ' ');
-		}
-	}
-	public enum NoSprint {
-		Real,
-		Packet_Spoof,
-		None;
+    public SnowInvMove() {
+        super(AddonTemplate.CATEGORY, "Snow Inv Move", "Move inside GUIs.");
+    }
 
-		@Override
-		public String toString() {
-			return super.toString().replace('_', ' ');
-		}
-	}
+    // --------------------------------------------------
+    // Settings
+    // --------------------------------------------------
 
-	private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    public enum Bypass {
+        No_Open_Packet,
+        None
+    }
 
-	private final Setting<Bypass> bypassSetting = sgGeneral.add(new EnumSetting.Builder<Bypass>()
-		.name("Bypass")
-		.description("Bypass mode.")
-		.defaultValue(Bypass.No_Open_Packet)
-		.build()
-	);
+    public enum NoSprint {
+        Real,
+        Packet_Spoof,
+        None
+    }
 
-	private final Setting<NoSprint> noSprintSetting = sgGeneral.add(new EnumSetting.Builder<NoSprint>()
-		.name("No-Sprint")
-		.description("NoSprint Bypass mode.")
-		.defaultValue(NoSprint.Packet_Spoof)
-		.build()
-	);
+    private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-	private final Setting<Boolean> noMoveClicks = sgGeneral.add(new BoolSetting.Builder()
-		.name("No-Move-Clicks")
-		.description("Block clicks in move.")
-		.defaultValue(false)
-		.build()
-	);
+    private final Setting<Boolean> twoB2T = sgGeneral.add(new BoolSetting.Builder()
+        .name("2b2t")
+        .defaultValue(true)
+        .build()
+    );
 
-	private final Setting<Screens> screens = sgGeneral.add(new EnumSetting.Builder<Screens>()
-		.name("gUIs")
-		.description("Which GUIs to move in.")
-		.defaultValue(Screens.Both)
-		.build()
-	);
+    private final Setting<Bypass> bypass = sgGeneral.add(new EnumSetting.Builder<Bypass>()
+        .name("bypass")
+        .defaultValue(Bypass.No_Open_Packet)
+        .build()
+    );
 
-	private final Setting<Boolean> jump = sgGeneral.add(new BoolSetting.Builder()
-		.name("jump")
-		.description("Allows you to jump while in GUIs.")
-		.defaultValue(false)
-		.onChanged(aBoolean -> {
-			if (isActive() && !aBoolean) set(mc.options.jumpKey, false);
-		})
-		.build()
-	);
+    private final Setting<NoSprint> noSprint = sgGeneral.add(new EnumSetting.Builder<NoSprint>()
+        .name("no-sprint")
+        .defaultValue(NoSprint.Packet_Spoof)
+        .build()
+    );
 
-	private final Setting<Boolean> sneak = sgGeneral.add(new BoolSetting.Builder()
-		.name("sneak")
-		.description("Allows you to sneak while in GUIs.")
-		.defaultValue(false)
-		.onChanged(aBoolean -> {
-			if (isActive() && !aBoolean) set(mc.options.sneakKey, false);
-		})
-		.build()
-	);
+    private final Setting<Boolean> noMoveClicks = sgGeneral.add(new BoolSetting.Builder()
+        .name("no-move-clicks")
+        .defaultValue(false)
+        .build()
+    );
 
-	private final Setting<Boolean> arrowsRotate = sgGeneral.add(new BoolSetting.Builder()
-		.name("arrows-rotate")
-		.description("Allows you to use your arrow keys to rotate while in GUIs.")
-		.defaultValue(true)
-		.build()
-	);
+    private final Setting<Boolean> arrowsRotate = sgGeneral.add(new BoolSetting.Builder()
+        .name("arrows-rotate")
+        .defaultValue(true)
+        .build()
+    );
 
-	private final Setting<Double> rotateSpeed = sgGeneral.add(new DoubleSetting.Builder()
-		.name("rotate-speed")
-		.description("Rotation speed while in GUIs.")
-		.defaultValue(4)
-		.min(0)
-		.build()
-	);
-	@Override
-	public void onDeactivate() {
-		set(mc.options.forwardKey, false);
-		set(mc.options.backKey, false);
-		set(mc.options.leftKey, false);
-		set(mc.options.rightKey, false);
-		if (jump.get()) set(mc.options.jumpKey, false);
-		if (sneak.get()) set(mc.options.sneakKey, false);
-		if (noSprintSetting.get() == NoSprint.None) set(mc.options.sprintKey, false);
-	}
+    private final Setting<Double> rotateSpeed = sgGeneral.add(new DoubleSetting.Builder()
+        .name("rotate-speed")
+        .defaultValue(4)
+        .min(0)
+        .build()
+    );
 
-	@EventHandler
-	private void onClickSlot(ClickWindowEvent event) {
-		if (noMoveClicks.get() && PlayerUtils.isMoving()) {
-			event.setCancelled(true);
-		}
-	}
+    // --------------------------------------------------
+    // Held Key System
+    // --------------------------------------------------
 
-	@EventHandler
-	private void onPacketSend(PacketEvent.Send event) {
-		if (event.packet instanceof ClientCommandC2SPacket packet) {
-			if (packet.getMode() == ClientCommandC2SPacket.Mode.OPEN_INVENTORY && bypassSetting.get() == Bypass.No_Open_Packet) {
-				if (noSprintSetting.get() == NoSprint.Packet_Spoof) {
-					if (mc.player.isSprinting())
-						mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.STOP_SPRINTING));
-					if (mc.player.isSneaking())
-						mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
-				}
-				event.cancel();
-			}
+    private boolean forwardHeld, backHeld, leftHeld, rightHeld, jumpHeld;
 
-			if (event.packet instanceof CloseHandledScreenC2SPacket closeHandledScreenC2SPacket) {
-				if (noSprintSetting.get() == NoSprint.Packet_Spoof) {
-					if (mc.player.isSprinting())
-						mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SPRINTING));
-					if (mc.player.isSneaking())
-						mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
-				}
-			}
-			if (event.packet instanceof CloseHandledScreenC2SPacket closeHandledScreenC2SPacket) {
-				if (noSprintSetting.get() == NoSprint.Packet_Spoof) {
-					if (mc.player.isSprinting())
-						mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_SPRINTING));
-					if (mc.player.isSneaking())
-						mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
-				}
-			}
-		}
-	}
+    @Override
+    public void onDeactivate() {
+        resetKeys();
+    }
 
-	@EventHandler
-	private void onTick(TickEvent.Pre event) {
-		if (!Utils.canUpdate()) return;
-		if (skip()) return;
-		if (screens.get() == Screens.GUI && !(mc.currentScreen instanceof WidgetScreen)) return;
-		if (screens.get() == Screens.Inventory && !(mc.currentScreen instanceof InventoryScreen)) return;
+    // --------------------------------------------------
+    // Packet Handling
+    // --------------------------------------------------
 
-		set(mc.options.forwardKey, Input.isPressed(mc.options.forwardKey));
-		set(mc.options.backKey, Input.isPressed(mc.options.backKey));
-		set(mc.options.leftKey, Input.isPressed(mc.options.leftKey));
-		set(mc.options.rightKey, Input.isPressed(mc.options.rightKey));
+    @EventHandler
+    private void onPacketSend(PacketEvent.Send event) {
+        if (mc.player == null) return;
 
-		if (jump.get()) set(mc.options.jumpKey, Input.isPressed(mc.options.jumpKey));
-		if (sneak.get()) set(mc.options.sneakKey, Input.isPressed(mc.options.sneakKey));
-		if (noSprintSetting.get() == NoSprint.None) set(mc.options.sprintKey, Input.isPressed(mc.options.sprintKey));
+        if (event.packet instanceof ClientCommandC2SPacket packet) {
+            if (packet.getMode() == ClientCommandC2SPacket.Mode.OPEN_INVENTORY
+                && bypass.get() == Bypass.No_Open_Packet) {
 
-		if (arrowsRotate.get()) {
-			float yaw = mc.player.getYaw();
-			float pitch = mc.player.getPitch();
+                if (noSprint.get() == NoSprint.Packet_Spoof) spoofStop();
+                event.cancel();
+            }
+        }
+    }
 
-			for (int i = 0; i < (rotateSpeed.get() * 2); i++) {
-				if (Input.isKeyPressed(GLFW_KEY_LEFT)) yaw -= 0.5;
-				if (Input.isKeyPressed(GLFW_KEY_RIGHT)) yaw += 0.5;
-				if (Input.isKeyPressed(GLFW_KEY_UP)) pitch -= 0.5;
-				if (Input.isKeyPressed(GLFW_KEY_DOWN)) pitch += 0.5;
-			}
+    @EventHandler
+    private void onPacketReceive(PacketEvent.Receive event) {
+        if (!twoB2T.get()) return;
 
-			pitch = MathHelper.clamp(pitch, -90, 90);
+        if (event.packet instanceof CloseScreenS2CPacket packet) {
+            if (mc.player != null && packet.getSyncId() == mc.player.playerScreenHandler.syncId) {
+                event.cancel();
+            }
+        }
+    }
 
-			mc.player.setYaw(yaw);
-			mc.player.setPitch(pitch);
-		}
-	}
+    private void spoofStop() {
+        if (mc.player.isSprinting())
+            mc.player.networkHandler.sendPacket(
+                new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.STOP_SPRINTING));
 
-	private void set(KeyBinding bind, boolean pressed) {
-		boolean wasPressed = bind.isPressed();
-		bind.setPressed(pressed);
+        if (mc.player.isSneaking())
+            mc.player.networkHandler.sendPacket(
+                new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
+    }
 
-		InputUtil.Key key = ((KeyBindingAccessor) bind).getKey();
-		if (wasPressed != pressed && key.getCategory() == InputUtil.Type.KEYSYM) {
-			MeteorClient.EVENT_BUS.post(KeyEvent.get(key.getCode(), 0, pressed ? KeyAction.Press : KeyAction.Release));
-		}
-	}
+    // --------------------------------------------------
+    // Movement Logic
+    // --------------------------------------------------
 
-	public boolean skip() {
-		return mc.currentScreen == null || (mc.currentScreen instanceof CreativeInventoryScreen && CreativeInventoryScreenAccessor.getSelectedTab().getType() == ItemGroup.Type.SEARCH) || mc.currentScreen instanceof ChatScreen || mc.currentScreen instanceof SignEditScreen || mc.currentScreen instanceof AnvilScreen || mc.currentScreen instanceof AbstractCommandBlockScreen || mc.currentScreen instanceof StructureBlockScreen;
-	}
+    @EventHandler
+    private void onTick(TickEvent.Pre event) {
+        if (!Utils.canUpdate()) return;
+
+        if (!canMove()) {
+            resetKeys();
+            return;
+        }
+
+        // Modern key tracking
+        forwardHeld = mc.options.forwardKey.isPressed();
+        backHeld = mc.options.backKey.isPressed();
+        leftHeld = mc.options.leftKey.isPressed();
+        rightHeld = mc.options.rightKey.isPressed();
+        jumpHeld = mc.options.jumpKey.isPressed();
+
+        updateHeldKeys();
+
+        if (arrowsRotate.get()) {
+            float yaw = mc.player.getYaw();
+            float pitch = mc.player.getPitch();
+
+            for (int i = 0; i < rotateSpeed.get() * 2; i++) {
+                if (isKeyPressed(GLFW_KEY_LEFT)) yaw -= 0.5f;
+                if (isKeyPressed(GLFW_KEY_RIGHT)) yaw += 0.5f;
+                if (isKeyPressed(GLFW_KEY_UP)) pitch -= 0.5f;
+                if (isKeyPressed(GLFW_KEY_DOWN)) pitch += 0.5f;
+            }
+
+            pitch = Math.max(-90, Math.min(90, pitch));
+            mc.player.setYaw(yaw);
+            mc.player.setPitch(pitch);
+        }
+    }
+
+    private void updateHeldKeys() {
+        set(mc.options.forwardKey, forwardHeld);
+        set(mc.options.backKey, backHeld);
+        set(mc.options.leftKey, leftHeld);
+        set(mc.options.rightKey, rightHeld);
+        set(mc.options.jumpKey, jumpHeld);
+    }
+
+    private void set(KeyBinding bind, boolean pressed) {
+        bind.setPressed(pressed);
+    }
+
+    private void resetKeys() {
+        forwardHeld = backHeld = leftHeld = rightHeld = jumpHeld = false;
+
+        mc.options.forwardKey.setPressed(false);
+        mc.options.backKey.setPressed(false);
+        mc.options.leftKey.setPressed(false);
+        mc.options.rightKey.setPressed(false);
+        mc.options.jumpKey.setPressed(false);
+        mc.options.sneakKey.setPressed(false);
+        mc.options.sprintKey.setPressed(false);
+    }
+
+    private boolean isKeyPressed(int key) {
+        return org.lwjgl.glfw.GLFW.glfwGetKey(mc.getWindow().getHandle(), key) == GLFW_PRESS;
+    }
+
+    // --------------------------------------------------
+    // GUI Filter
+    // --------------------------------------------------
+
+    private boolean canMove() {
+        if (mc.currentScreen == null) return true;
+
+        return !(mc.currentScreen instanceof ChatScreen
+            || mc.currentScreen instanceof SignEditScreen
+            || mc.currentScreen instanceof AnvilScreen
+            || mc.currentScreen instanceof AbstractCommandBlockScreen
+            || mc.currentScreen instanceof StructureBlockScreen
+            || mc.currentScreen instanceof CreativeInventoryScreen);
+    }
 }

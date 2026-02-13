@@ -1,8 +1,12 @@
 # A Greek Tragedy
 
 Skidded addon i made to assist u in (anarchy) servers.
-While still in early dev, it has more than 30 modules.
-It also has grim features to assit with BepHax or mioclient.me if i/somebody can port it correctly.
+While still in early dev, it has more than 40 modules.
+It also has grim features to assist with BepHax or mioclient.me if i/somebody can port it correctly.
+
+### Origins
+
+This project started when i saw the server "SnowCapSMP" on minehut.gg, then it grew into a universal project for all anarchy/grim servers.
 
 https://discord.gg/kgdDMxPWf9
 

@@ -1,5 +1,6 @@
 package com.example.addon.modules;
 
+import com.example.addon.AddonTemplate;
 import com.mojang.authlib.GameProfile;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.BoolSetting;
@@ -35,7 +36,7 @@ public class SnowKicker extends Module {
     private final Setting<Boolean> ban = sgGeneral.add(new BoolSetting.Builder()
         .name("ban")
         .description("Whether to kick joining players.")
-        .defaultValue(false)
+        .defaultValue(true)
         .build()
     );
 
@@ -49,7 +50,7 @@ public class SnowKicker extends Module {
     private static final HashSet<GameProfile> processingPlayers = new HashSet<>();
 
     public SnowKicker() {
-        super(Categories.Misc, "snow-kicker", "Kicks everyone on a cracked server.");
+        super(AddonTemplate.CATEGORY, "Snow Kicker", "Kicks everyone on a cracked server.");
     }
 
     @Override

@@ -19,7 +19,7 @@ public class SnowAscend extends Module {
         super(AddonTemplate.CATEGORY, "Snow Ascend", "car car go");
     }
 
-    private final Setting<Double> flySpeed = sgGeneral.add(new DoubleSetting.Builder().name("flyspeed").description("the speed you fly").defaultValue(5.0d).range(0.0d, 5.0d).build());
+    private final Setting<Double> flySpeed = sgGeneral.add(new DoubleSetting.Builder().name("flyspeed").description("the speed you fly").defaultValue(1.0d).range(0.0d, 5.0d).build());
     private final Setting<Double> TpUp = sgGeneral.add(new DoubleSetting.Builder().name("TpUp").description("amount of block you get teleported up on activate").defaultValue(0.2).range(0, 3).build());
     private final Setting<Integer> goDownTime = sgGeneral.add(new IntSetting.Builder().name("goDownTime").description("time(ticks) to go down").defaultValue(60).range(1,800).build());
     private final Setting<Boolean> antiKick = sgGeneral.add(new BoolSetting.Builder().name("anti kick").description("time(ticks) to go down").defaultValue(true).build());

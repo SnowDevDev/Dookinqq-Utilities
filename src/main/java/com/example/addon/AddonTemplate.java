@@ -34,7 +34,6 @@ public class AddonTemplate extends MeteorAddon {
         Modules.get().add(new SnowMIK());
         Modules.get().add(new SnowRIK());
         Modules.get().add(new SnowBaseESP());
-        Modules.get().add(new SnowNJD());
         Modules.get().add(new SnowDM());
         Modules.get().add(new SnowFatty());
         Modules.get().add(new SnowSniper());
@@ -66,6 +65,7 @@ public class AddonTemplate extends MeteorAddon {
         Modules.get().add(new SnowHWB());
         Modules.get().add(new SnowAutoWither());
         Modules.get().add(new SnowSwing());
+        Modules.get().add(new SnowSpeed());
         Modules.get().add(SnowIRC.INSTANCE);
         Modules.get().add(new SnowPrefix());
         SnowPrefix prefix = new SnowPrefix();
