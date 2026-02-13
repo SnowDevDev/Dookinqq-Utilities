@@ -1,3 +1,7 @@
+# NEWS
+
+V1.9.8+4 and so on will not be released (13/2/2026).
+
 # A Greek Tragedy
 
 Skidded addon i made to assist u in (anarchy) servers.
