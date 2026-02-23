@@ -80,7 +80,7 @@ public class SnowGrimFlight extends Module {
     private boolean shouldDelay;
 
     public SnowGrimFlight() {
-        super(AddonTemplate.CATEGORY, "Snow Grim Flight", "Grim fly modes.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Grim Flight", "Grim fly modes.");
     }
 
     @Override
@@ -145,7 +145,7 @@ timerModule.setOverride(1);
 
         if (mode.get() == Mode.Grim2859V) {
             if (ticks >= 2) {
-                storedPos = mc.player.getPos();
+                storedPos = com.example.addon.utils.Compat.getPos(mc.player);
                 mc.player.setPosition(
                     storedPos.x + 1152,
                     storedPos.y,
@@ -218,3 +218,5 @@ timerModule.setOverride(1);
         );
     }
 }
+
+

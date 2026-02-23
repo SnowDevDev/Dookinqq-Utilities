@@ -24,7 +24,7 @@ public class SnowGFF extends Module {
 
 
     public SnowGFF() {
-        super(AddonTemplate.CATEGORY, "Snow GFF", "Makes you fall very quickly and with mostly no fall damage.");
+        super(AddonTemplate.CATEGORY, "Dookinqq GFF", "Makes you fall very quickly and with mostly no fall damage.");
     }
 
     @Override
@@ -33,11 +33,25 @@ public class SnowGFF extends Module {
     }
 
     @EventHandler
-    private void onTick(TickEvent.Post event) {
-        if (mc.player == null) return;
-        HitResult hitResult = mc.getCameraEntity().raycast(5, 0, false);
-        for (int i = 0; i < amountPerTick.get(); i++) {
-            mc.player.networkHandler.sendPacket(new PlayerInteractBlockC2SPacket(Hand.OFF_HAND, (BlockHitResult) hitResult, mc.player.currentScreenHandler.getRevision()));
-        }
+private void onTick(TickEvent.Post event) {
+    if (mc.player == null) return;
+
+    HitResult hitResult = mc.getCameraEntity().raycast(5, 0, false);
+    if (hitResult.getType() != HitResult.Type.BLOCK) return; // Only blocks
+
+    BlockHitResult blockHit = (BlockHitResult) hitResult;
+
+    for (int i = 0; i < amountPerTick.get(); i++) {
+        mc.player.networkHandler.sendPacket(
+            new PlayerInteractBlockC2SPacket(
+                Hand.OFF_HAND, 
+                blockHit, 
+                mc.player.currentScreenHandler.getRevision()
+            )
+        );
     }
 }
+}
+
+
+

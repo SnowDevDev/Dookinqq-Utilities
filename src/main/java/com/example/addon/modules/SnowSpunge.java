@@ -47,7 +47,7 @@ public class SnowSpunge extends Module {
     );
 
     public SnowSpunge() {
-        super(AddonTemplate.CATEGORY, "Snow Spunge", "Join BungeeCord servers with optional spoofing.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Spunge", "Join BungeeCord servers with optional spoofing.");
         runInMainMenu = true;
     }
 
@@ -63,14 +63,15 @@ private void onPacketSend(PacketEvent.Send event) {
     String original = acc.getAddress();
     String address = original
             + "\0" + forwardedIP.get()
-            + "\0" + mc.getNetworkHandler().getProfile().getId().toString().replace("-", "")
+            + "\0" + com.example.addon.utils.Compat.getProfileId(mc.getNetworkHandler().getProfile()).replace("-", "")
             + (spoofProfile.get() ? getProperty() : "");
 
     acc.setAddress(address);
 }
 
     private String getProperty() {
-        PropertyMap propertyMap = mc.getNetworkHandler().getProfile().getProperties();
-        return "\0" + GSON.toJson(propertyMap.values().toArray());
+        return "\0" + com.example.addon.utils.Compat.getProfilePropertiesJson(mc.getNetworkHandler().getProfile());
     }
 }
+
+

@@ -27,7 +27,7 @@ public class SnowSwap extends Module {
     );
 
     public SnowSwap() {
-        super(AddonTemplate.CATEGORY, "Snow Swap", "Attribute swapping.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Swap", "Attribute swapping.");
     }
 
     private void swapBack(int slot) {
@@ -45,7 +45,7 @@ private void onSendPacket(PacketEvent.Send event) {
     if (event.packet instanceof PlayerInteractEntityC2SPacket packet
         && packet.getClass().getSimpleName().equals("Attack")) {
 
-        int oldSlot = mc.player.getInventory().selectedSlot;
+        int oldSlot = com.example.addon.utils.Compat.getSelectedSlot(mc.player.getInventory());
         ItemStack stack = mc.player.getMainHandStack();
 
         if (stack.isIn(ItemTags.SWORDS) || stack.isIn(ItemTags.AXES)) {
@@ -63,3 +63,5 @@ private void onSendPacket(PacketEvent.Send event) {
     }
 }
 }
+
+

@@ -174,7 +174,7 @@ public class SnowSniper extends Module {
         .build();
 
     public SnowSniper() {
-        super(AddonTemplate.CATEGORY, "Snow Sniper", "donut type shi");
+        super(AddonTemplate.CATEGORY, "Dookinqq Sniper", "donut type shi");
     }
 
     @Override
@@ -950,3 +950,6 @@ public class SnowSniper extends Module {
         return result.toString().trim();
     }
 }
+
+
+

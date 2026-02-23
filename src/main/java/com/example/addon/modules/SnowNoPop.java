@@ -13,7 +13,7 @@ public class SnowNoPop extends Module {
     private int attackTimer = 0;
 
     public SnowNoPop() {
-        super(AddonTemplate.CATEGORY, "Snow No Pop", "Cancels OnGround packets specifically when attacking with Mace.");
+        super(AddonTemplate.CATEGORY, "Dookinqq No Pop", "Cancels OnGround packets specifically when attacking with Mace.");
     }
 
     // Local enum to mirror private enum (for ordinals)
@@ -64,3 +64,5 @@ public class SnowNoPop extends Module {
         }
     }
 }
+
+

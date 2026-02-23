@@ -1,6 +1,7 @@
 package com.example.addon.modules;
 
 import com.example.addon.AddonTemplate;
+import com.example.addon.utils.PacketCompat;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
@@ -19,7 +20,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class SnowInvMove extends Module {
 
     public SnowInvMove() {
-        super(AddonTemplate.CATEGORY, "Snow Inv Move", "Move inside GUIs.");
+        super(AddonTemplate.CATEGORY, "dookinqq-inv-move", "Move inside GUIs.");
     }
 
     // --------------------------------------------------
@@ -123,7 +124,7 @@ public class SnowInvMove extends Module {
 
         if (mc.player.isSneaking())
             mc.player.networkHandler.sendPacket(
-                new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.RELEASE_SHIFT_KEY));
+                PacketCompat.createReleaseShiftPacket(mc.player));
     }
 
     // --------------------------------------------------
@@ -139,7 +140,7 @@ public class SnowInvMove extends Module {
             return;
         }
 
-        // Modern key tracking
+        // Track current key presses
         forwardHeld = mc.options.forwardKey.isPressed();
         backHeld = mc.options.backKey.isPressed();
         leftHeld = mc.options.leftKey.isPressed();

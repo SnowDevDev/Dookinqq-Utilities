@@ -29,7 +29,7 @@ public class SnowTotem extends Module {
     );
 
     public SnowTotem() {
-        super(AddonTemplate.CATEGORY, "Snow Totem", "Changes the color of the totem pop particles.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Totem", "Changes the color of the totem pop particles.");
     }
 
     public Vec3d getColorOne() {
@@ -44,3 +44,6 @@ public class SnowTotem extends Module {
         return new Vec3d((double) colorSetting.get().r / 255, (double) colorSetting.get().g / 255, (double) colorSetting.get().b / 255);
     }
 }
+
+
+

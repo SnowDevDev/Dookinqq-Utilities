@@ -24,7 +24,8 @@ import net.minecraft.block.entity.HangingSignBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
-import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
+// DownloadingTerrainScreen may not exist in all mappings; check by name at runtime
+import com.example.addon.utils.Compat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -718,7 +719,7 @@ public class SnowBaseESP extends Module {
     private int entityScanTicks;
 
     public SnowBaseESP() {
-        super(AddonTemplate.CATEGORY,"Snow Base ESP", "Base finder for the server");
+        super(AddonTemplate.CATEGORY, "Dookinqq Base ESP", "Base finder for the server");
     }
     private void clearChunkData() {
         baseChunks.clear();
@@ -778,7 +779,7 @@ public class SnowBaseESP extends Module {
                 clearChunkData();
             }
         }
-        if (event.screen instanceof DownloadingTerrainScreen) {
+        if (event.screen != null && event.screen.getClass().getSimpleName().equals("DownloadingTerrainScreen")) {
             worldchange=true;
         }
     }
@@ -914,7 +915,7 @@ public class SnowBaseESP extends Module {
                                         }
                                         if (basefoundspamTicks == 0) {
                                             if (chatFeedback.get()){
-                                                if (displaycoords.get())ChatUtils.sendMsg(Text.of("Item Frame located near X" + entity.getPos().getX() + ", Y" + entity.getPos().getY() + ", Z" + entity.getPos().getZ()));
+                                                if (displaycoords.get())ChatUtils.sendMsg(Text.of("Item Frame located near X" + Compat.getPos(entity).x + ", Y" + Compat.getPos(entity).y + ", Z" + Compat.getPos(entity).z));
                                                 else ChatUtils.sendMsg(Text.of("Item Frame located!"));
                                             }
                                             LastBaseFound = new ChunkPos(chunk.getPos().x, chunk.getPos().z);
@@ -928,21 +929,21 @@ public class SnowBaseESP extends Module {
                                     }
                                     if (basefoundspamTicks == 0) {
                                         if (chatFeedback.get()){
-                                            if (displaycoords.get())ChatUtils.sendMsg(Text.of("Ender Pearl located near X" + entity.getPos().getX() + ", Y" + entity.getPos().getY() + ", Z" + entity.getPos().getZ()));
+                                            if (displaycoords.get())ChatUtils.sendMsg(Text.of("Ender Pearl located near X" + Compat.getPos(entity).x + ", Y" + Compat.getPos(entity).y + ", Z" + Compat.getPos(entity).z));
                                             else ChatUtils.sendMsg(Text.of("Ender Pearl located!"));
                                         }
                                         LastBaseFound = new ChunkPos(chunk.getPos().x, chunk.getPos().z);
                                         basefound = true;
                                     }
                                 } else if (entity instanceof VillagerEntity && villagerFinder.get()) {
-                                    if (((VillagerEntity) entity).getVillagerData().getLevel() > 1) {
+                                    if (com.example.addon.utils.Compat.getVillagerLevel(entity) > 1) {
                                         baseChunks.add(chunk.getPos());
                                         if (save.get()) {
                                             saveBaseChunkData(chunk.getPos());
                                         }
                                         if (basefoundspamTicks == 0) {
                                             if (chatFeedback.get()){
-                                                if (displaycoords.get())ChatUtils.sendMsg(Text.of("Illegal Villager located near X" + entity.getPos().getX() + ", Y" + entity.getPos().getY() + ", Z" + entity.getPos().getZ()));
+                                                if (displaycoords.get())ChatUtils.sendMsg(Text.of("Illegal Villager located near X" + Compat.getPos(entity).x + ", Y" + Compat.getPos(entity).y + ", Z" + Compat.getPos(entity).z));
                                                 else ChatUtils.sendMsg(Text.of("Illegal Villager located!"));
                                             }
                                             LastBaseFound = new ChunkPos(chunk.getPos().x, chunk.getPos().z);
@@ -956,7 +957,7 @@ public class SnowBaseESP extends Module {
                                     }
                                     if (basefoundspamTicks == 0) {
                                         if (chatFeedback.get()){
-                                            if (displaycoords.get())ChatUtils.sendMsg(Text.of("NameTagged Entity located near X" + entity.getPos().getX() + ", Y" + entity.getPos().getY() + ", Z" + entity.getPos().getZ()));
+                                            if (displaycoords.get())ChatUtils.sendMsg(Text.of("NameTagged Entity located near X" + Compat.getPos(entity).x + ", Y" + Compat.getPos(entity).y + ", Z" + Compat.getPos(entity).z));
                                             else ChatUtils.sendMsg(Text.of("NameTagged Entity located!"));
                                         }
                                         LastBaseFound = new ChunkPos(chunk.getPos().x, chunk.getPos().z);
@@ -969,7 +970,7 @@ public class SnowBaseESP extends Module {
                                     }
                                     if (basefoundspamTicks == 0) {
                                         if (chatFeedback.get()){
-                                            if (displaycoords.get())ChatUtils.sendMsg(Text.of("Illegal Boat located near X" + entity.getPos().getX() + ", Y" + entity.getPos().getY() + ", Z" + entity.getPos().getZ()));
+                                            if (displaycoords.get())ChatUtils.sendMsg(Text.of("Illegal Boat located near X" + Compat.getPos(entity).x + ", Y" + Compat.getPos(entity).y + ", Z" + Compat.getPos(entity).z));
                                             else ChatUtils.sendMsg(Text.of("Illegal Boat located!"));
                                         }
                                         LastBaseFound = new ChunkPos(chunk.getPos().x, chunk.getPos().z);
@@ -1052,8 +1053,8 @@ public class SnowBaseESP extends Module {
                 WorldChunk chunk = new WorldChunk(mc.world, basepos);
                 try {
                     CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                        chunk.loadFromPacket(packet.getChunkData().getSectionsDataBuf(), new NbtCompound(),
-                                packet.getChunkData().getBlockEntities(packet.getChunkX(), packet.getChunkZ()));
+                    chunk.loadFromPacket(packet.getChunkData().getSectionsDataBuf(), Collections.emptyMap(),
+                        packet.getChunkData().getBlockEntities(packet.getChunkX(), packet.getChunkZ()));
                     }, taskExecutor);
                     future.join();
                 } catch (CompletionException e) {}
@@ -1230,7 +1231,7 @@ public class SnowBaseESP extends Module {
                                                     }
                                                     //dungeon MOSSY_COBBLESTONE, mineshaft COBWEB, fortress NETHER_BRICK_FENCE, stronghold STONE_BRICK_STAIRS, bastion CHAIN
                                                     if (mc.world.getRegistryKey() == World.OVERWORLD && (blerks.getBlock()==Blocks.MOSSY_COBBLESTONE || blerks.getBlock()==Blocks.COBWEB || blerks.getBlock()==Blocks.STONE_BRICK_STAIRS || blerks.getBlock()==Blocks.BUDDING_AMETHYST))spawnernaturalblocks=true;
-                                                    else if (mc.world.getRegistryKey() == World.NETHER && (blerks.getBlock()==Blocks.NETHER_BRICK_FENCE || blerks.getBlock()==Blocks.CHAIN))spawnernaturalblocks=true;
+                                                    else if (mc.world.getRegistryKey() == World.NETHER && (blerks.getBlock()==Blocks.NETHER_BRICK_FENCE || java.util.Objects.equals(blerks.getBlock(), com.example.addon.utils.Compat.getBlockConstant("CHAIN"))))spawnernaturalblocks=true;
                                                 }
                                                 if (list1Activar.get() && !Blawcks1.get().isEmpty()){
                                                     if (Blawcks1.get().contains(blerks.getBlock())) {
@@ -1653,3 +1654,5 @@ public class SnowBaseESP extends Module {
         }
     }
 }
+
+

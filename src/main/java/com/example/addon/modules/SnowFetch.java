@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class SnowFetch extends Module {
     public SnowFetch() {
-        super(AddonTemplate.CATEGORY, "Snow Fetch", "liquidbounce's plugin fetcher skidded into meteor");
+        super(AddonTemplate.CATEGORY, "Dookinqq Fetch", "liquidbounce's plugin fetcher skidded into meteor");
     }
 
     @Override
@@ -37,3 +37,5 @@ public class SnowFetch extends Module {
         this.toggle();
     }
 }
+
+

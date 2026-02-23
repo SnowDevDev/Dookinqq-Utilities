@@ -67,7 +67,7 @@ public class SnowAntiCrash extends Module {
     );
 
     public SnowAntiCrash() {
-        super(AddonTemplate.CATEGORY, "Snow Anti Crash", "Prevents server-side packets intended to crash your client.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Anti Crash", "Prevents server-side packets intended to crash your client.");
     }
 
     @EventHandler
@@ -199,3 +199,5 @@ public class SnowAntiCrash extends Module {
         }
     }
 }
+
+

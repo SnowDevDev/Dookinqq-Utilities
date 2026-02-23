@@ -33,7 +33,7 @@ public class SnowAntiOpium extends Module {
     }
 
     public SnowAntiOpium() {
-        super(AddonTemplate.CATEGORY, "Snow Anti Opium", "Warns of potential chunk ban exploits.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Anti Opium", "Warns of potential chunk ban exploits.");
     }
 
     @EventHandler
@@ -54,3 +54,6 @@ public class SnowAntiOpium extends Module {
         }
     }
 }
+
+
+

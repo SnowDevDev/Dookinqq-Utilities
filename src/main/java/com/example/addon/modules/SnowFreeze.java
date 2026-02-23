@@ -19,7 +19,7 @@ import com.example.addon.AddonTemplate;
 
 public class SnowFreeze extends Module {
     public SnowFreeze() {
-        super(AddonTemplate.CATEGORY, "Snow Freeze", "Freezes your position for server.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Freeze", "Freezes your position for server.");
     }
 
     private final SettingGroup FSettings = settings.getDefaultGroup();
@@ -65,7 +65,7 @@ public class SnowFreeze extends Module {
         if (mc.player != null) {
             yaw = mc.player.getYaw();
             pitch = mc.player.getPitch();
-            position = mc.player.getPos(); // FIXED
+            position = com.example.addon.utils.Compat.getPos(mc.player); // FIXED
         }
     }
 
@@ -137,3 +137,5 @@ PlayerMoveC2SPacket.LookAndOnGround packet =
         }
     }
 }
+
+

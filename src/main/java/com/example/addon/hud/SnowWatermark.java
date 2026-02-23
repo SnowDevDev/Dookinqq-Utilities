@@ -7,15 +7,31 @@ import meteordevelopment.meteorclient.systems.hud.HudRenderer;
 import meteordevelopment.meteorclient.utils.render.color.Color;
 import net.minecraft.client.MinecraftClient;
 
+import java.util.Random;
+
 public class SnowWatermark extends HudElement {
 
     public static final HudElementInfo<SnowWatermark> INFO =
             new HudElementInfo<>(AddonTemplate.HUD_GROUP,
-                    "snow-watermark",
-                    "Snow Utils Watermark",
+                    "Dookinqq Watermark",
+                    "Dookinqq Utils Watermark",
                     SnowWatermark::new);
 
+    private int charIndex = 0;
+    private boolean deleting = false;
+    private long lastUpdate = 0;
+
+    private long pauseEnd = 0;
+    private final long pauseDuration = 1050;
+
+    private final Random random = new Random();
     private final MinecraftClient mc = MinecraftClient.getInstance();
+    private final String fullText = "Dookinqq Utils";
+
+    // Smooth animation width
+    private double displayWidth = 0;
+    private final double expandSpeed = 6.5;   // slower expand
+    private final double shrinkSpeed = 12.0;  // faster shrink
 
     public SnowWatermark() {
         super(INFO);
@@ -23,34 +39,68 @@ public class SnowWatermark extends HudElement {
 
     @Override
     public void render(HudRenderer renderer) {
+        if (mc.world == null) return;
 
-        String clientName = "Snow Utils";
-        String version = "v1.0";
-        String username = mc.getSession().getUsername();
+        long time = System.currentTimeMillis();
 
-        String text = clientName + " §7| §f" + username + " §7| §b" + version;
+        if (time >= pauseEnd) {
+            int delay = randomInt(50, 80);
 
-        double width = renderer.textWidth(text, true);
-        double height = renderer.textHeight(true);
+            if (time - lastUpdate > delay) {
+                lastUpdate = time;
 
-        setSize(width + 10, height + 6);
+                if (!deleting) {
+                    charIndex++;
+                    if (charIndex >= fullText.length()) {
+                        charIndex = fullText.length();
+                        deleting = true;
+                        pauseEnd = time + pauseDuration;
+                    }
+                } else {
+                    charIndex--;
+                    if (charIndex <= 0) {
+                        charIndex = 0;
+                        deleting = false;
+                        pauseEnd = time + pauseDuration;
+                    }
+                }
+            }
+        }
+
+        charIndex = Math.max(0, Math.min(charIndex, fullText.length()));
+        String visibleText = fullText.substring(0, charIndex);
+
+        double targetWidth = renderer.textWidth(visibleText, true) + 10;
+        double height = renderer.textHeight(true) + 6;
+
+        // Smooth width animation
+        if (displayWidth < targetWidth) {
+            displayWidth += expandSpeed;
+            if (displayWidth > targetWidth) displayWidth = targetWidth;
+        } else if (displayWidth > targetWidth) {
+            displayWidth -= shrinkSpeed;
+            if (displayWidth < targetWidth) displayWidth = targetWidth;
+        }
+
+        setSize(displayWidth, height);
 
         // Background
-        renderer.quad(x, y, width + 10, height + 6,
+        renderer.quad(x, y, displayWidth, height,
                 new Color(15, 15, 20, 160));
 
-        // Accent bar (top)
-        renderer.quad(x, y, width + 10, 2,
-                new Color(192, 32, 32)); // soft pink accent
+        // Accent bar
+        renderer.quad(x, y, displayWidth, 2,
+                new Color(0, 128, 255));
 
-        // Main text (gradient-ish effect)
-        renderer.text(clientName, x + 5, y + 3,
-                new Color(192, 32, 32), true);
+        // Draw text only when background has space
+        if (displayWidth > 12) {
+            renderer.text(visibleText,
+                    x + 5, y + 3,
+                    Color.WHITE, true);
+        }
+    }
 
-        double offset = renderer.textWidth(clientName, true);
-
-        renderer.text(" §7| §f" + username + " §7| §b" + version,
-                x + 5 + offset, y + 3,
-                Color.WHITE, true);
+    private int randomInt(int min, int max) {
+        return random.nextInt(max - min + 1) + min;
     }
 }

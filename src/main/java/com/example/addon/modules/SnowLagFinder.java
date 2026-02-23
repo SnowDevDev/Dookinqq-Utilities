@@ -18,7 +18,7 @@ public class SnowLagFinder extends Module {
     private long packetTimer = System.nanoTime();
 
     public SnowLagFinder() {
-        super(AddonTemplate.CATEGORY, "Snow Lag Finder", "Show text when lag");
+        super(AddonTemplate.CATEGORY, "Dookinqq Lag Finder", "Show text when lag");
     }
 
     @EventHandler
@@ -43,3 +43,6 @@ public class SnowLagFinder extends Module {
 
     }
 }
+
+
+

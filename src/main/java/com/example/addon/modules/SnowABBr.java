@@ -72,7 +72,7 @@ public class SnowABBr extends Module {
     }
 
     public SnowABBr() {
-        super(AddonTemplate.CATEGORY, "Snow ABBr", "Generates uncompressible heavy books.");
+        super(AddonTemplate.CATEGORY, "Dookinqq ABBr", "Generates uncompressible heavy books.");
     }
 
     @Override
@@ -107,7 +107,7 @@ public class SnowABBr extends Module {
                     toggle();
                     return;
                 }
-                InvUtils.move().from(slot).toHotbar(mc.player.getInventory().selectedSlot);
+                InvUtils.move().from(slot).toHotbar(com.example.addon.utils.Compat.getSelectedSlot(mc.player.getInventory()));
                 stage = Stage.Write;
                 timer = 1;
                 break;
@@ -126,7 +126,7 @@ public class SnowABBr extends Module {
                 }
 
                 mc.player.networkHandler.sendPacket(new BookUpdateC2SPacket(
-                        mc.player.getInventory().selectedSlot,
+                        com.example.addon.utils.Compat.getSelectedSlot(mc.player.getInventory()),
                         pageContent,
                         Optional.of(generateRandomJunk(10))
                 ));
@@ -176,3 +176,5 @@ public class SnowABBr extends Module {
         return sb.toString();
     }
 }
+
+

@@ -20,7 +20,7 @@ import static meteordevelopment.meteorclient.MeteorClient.mc;
 public class SnowFriendly extends HudElement {
     public static final HudElementInfo<SnowFriendly> INFO = new HudElementInfo<>(
         AddonTemplate.HUD_GROUP,
-        "Snow Friendly",
+        "Dookinqq Friendly",
         "Displays online friends from your friend list.",
         SnowFriendly::new
     );
@@ -115,7 +115,7 @@ public class SnowFriendly extends HudElement {
         // Render friend names in light blue
         double currentY = y + lineHeight;
         for (String friend : onlineFriends) {
-            renderer.text(friend, x, currentY, friendColor.get(), false);
+            renderer.text(friend, x, currentY, friendColor.get(), true);
             currentY += lineHeight;
         }
     }
@@ -129,7 +129,7 @@ public class SnowFriendly extends HudElement {
         String ourPlayerName = mc.player.getName().getString();
 
         for (PlayerListEntry player : mc.getNetworkHandler().getPlayerList()) {
-            String playerName = player.getProfile().getName();
+            String playerName = com.example.addon.utils.Compat.getProfileName(player.getProfile());
 
             // Skip ourselves and only include friends
             if (!playerName.equals(ourPlayerName) && Friends.get().isFriend(player)) {
@@ -140,3 +140,6 @@ public class SnowFriendly extends HudElement {
         return onlineFriends;
     }
 }
+
+
+

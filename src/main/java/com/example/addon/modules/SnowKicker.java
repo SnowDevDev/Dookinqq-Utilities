@@ -50,7 +50,7 @@ public class SnowKicker extends Module {
     private static final HashSet<GameProfile> processingPlayers = new HashSet<>();
 
     public SnowKicker() {
-        super(AddonTemplate.CATEGORY, "Snow Kicker", "Kicks everyone on a cracked server.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Kicker", "Kicks everyone on a cracked server.");
     }
 
     @Override
@@ -94,15 +94,14 @@ public class SnowKicker extends Module {
 
         CompletableFuture.runAsync(() -> {
             try {
-                ClientConnection.connect(address, mc.options.shouldUseNativeTransport(), connection)
-                    .get(5, TimeUnit.SECONDS);
+                com.example.addon.utils.Compat.connectClient(address, mc.options.shouldUseNativeTransport(), connection);
             } catch (Exception e) {
                 processingPlayers.remove(profile);
                 connection.disconnect(Text.literal("Failed"));
                 return;
             }
 
-            connection.send(new LoginHelloC2SPacket(profile.getName(), profile.getId()));
+            com.example.addon.utils.Compat.sendLoginHello(connection, profile);
 
             try {
                 Thread.sleep(3000);
@@ -113,3 +112,5 @@ public class SnowKicker extends Module {
         });
     }
 }
+
+

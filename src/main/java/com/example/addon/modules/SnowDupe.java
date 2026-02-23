@@ -155,7 +155,7 @@ public class SnowDupe extends Module {
 
 
     public SnowDupe() {
-        super(AddonTemplate.CATEGORY, "Snow Dupe", "DU Addon's dupe. Works on Paper and Spigot; Look on dupedb.net for settings info; Credit to Nummernuts and numberz <3");
+        super(AddonTemplate.CATEGORY, "Dookinqq Dupe", "DU Addon's dupe. Works on Paper and Spigot; Look on dupedb.net for settings info; Credit to Nummernuts and numberz <3");
     }
 
     @Override
@@ -339,7 +339,7 @@ public class SnowDupe extends Module {
         assert mc.player != null;
         assert mc.getNetworkHandler() != null;
         for (int i = 0; i < this.clickslotPackets.get(); ++i) {
-            ClickSlotC2SPacket packet = new ClickSlotC2SPacket(0, 0, (short) 0, (byte) 0, SlotActionType.PICKUP, ItemStack.EMPTY, new Int2ObjectArrayMap<>());
+            ClickSlotC2SPacket packet = (ClickSlotC2SPacket) com.example.addon.utils.PacketCompat.createClickSlotPacket(0, 0, (short) 0, (byte) 0, SlotActionType.PICKUP, ItemStack.EMPTY, new Int2ObjectArrayMap<>());
             this.mc.getNetworkHandler().sendPacket(packet);
         }
 
@@ -358,7 +358,7 @@ public class SnowDupe extends Module {
 
         RegistryEntryList<Block> registryList = RegistryEntryList.of(entries);
         ToolComponent.Rule rule = ToolComponent.Rule.of(registryList, 6.0F);
-        ToolComponent toolComponent = new ToolComponent(List.of(rule), 1.0F, 1);
+        ToolComponent toolComponent = new ToolComponent(List.of(rule), 1.0F, 1, false);
         stack.set(DataComponentTypes.TOOL, toolComponent);
         Int2ObjectMap<ItemStack> modifiedSlots = new Int2ObjectArrayMap<>(128);
 
@@ -367,7 +367,7 @@ public class SnowDupe extends Module {
         }
 
         for (int i = 0; i < this.exploitPackets.get(); ++i) {
-            ClickSlotC2SPacket packet = new ClickSlotC2SPacket(0, 0, (short) 0, (byte) 0, SlotActionType.PICKUP, stack, modifiedSlots);
+            ClickSlotC2SPacket packet = (ClickSlotC2SPacket) com.example.addon.utils.PacketCompat.createClickSlotPacket(0, 0, (short) 0, (byte) 0, SlotActionType.PICKUP, stack, modifiedSlots);
             this.mc.getNetworkHandler().sendPacket(packet);
         }
 
@@ -402,3 +402,6 @@ public class SnowDupe extends Module {
 
 
 }
+
+
+

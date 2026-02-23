@@ -488,7 +488,7 @@ public class SnowHWB extends Module {
     private final MBlockPos posRender3 = new MBlockPos();
 
     public SnowHWB() {
-        super(AddonTemplate.CATEGORY, "Snow HWB", "Automatically builds highways.");
+        super(AddonTemplate.CATEGORY, "Dookinqq HWB", "Automatically builds highways.");
         runInMainMenu = true;
     }
 
@@ -508,7 +508,7 @@ public class SnowHWB extends Module {
         setState(State.Center);
         lastBreakingPos.set(0, 0, 0);
 
-        start = mc.player.getPos();
+        start = com.example.addon.utils.Compat.getPos(mc.player);
         blocksBroken = blocksPlaced = 0;
         displayInfo = true;
         sentLagMessage = false;
@@ -606,10 +606,11 @@ public class SnowHWB extends Module {
     @EventHandler
     private void onPacket(PacketEvent.Receive event) {
         if (event.packet instanceof InventoryS2CPacket p) {
-            if (p.getSyncId() == 0 && suspended)
+            int sid = com.example.addon.utils.Compat.getSyncId(p);
+            if (sid == 0 && suspended)
                 inventory = true;
             else
-                this.syncId = p.getSyncId();
+                this.syncId = sid;
         }
     }
 
@@ -795,7 +796,7 @@ public class SnowHWB extends Module {
         Center {
             @Override
             protected void start(SnowHWB b) {
-                if (b.mc.player.getPos().isInRange(Vec3d.ofBottomCenter(b.mc.player.getBlockPos()), 0.1)) {
+                if (com.example.addon.utils.Compat.getPos(b.mc.player).isInRange(Vec3d.ofBottomCenter(b.mc.player.getBlockPos()), 0.1)) {
                     stop(b);
                 }
             }
@@ -926,7 +927,7 @@ public class SnowHWB extends Module {
 
             @Override
             protected void tick(SnowHWB b) {
-                Vec3d vec = b.mc.player.getPos().add(b.mc.player.getVelocity()).add(0, -0.75, 0);
+                Vec3d vec = com.example.addon.utils.Compat.getPos(b.mc.player).add(b.mc.player.getVelocity()).add(0, -0.75, 0);
                 pos.set(b.mc.player.getBlockX(), vec.y, b.mc.player.getBlockZ());
 
                 if (pos.getY() >= b.mc.player.getBlockPos().getY()) {
@@ -1116,7 +1117,7 @@ public class SnowHWB extends Module {
             protected void start(SnowHWB b) {
                 int biggestCount = 0;
 
-                for (int i = 0; i < b.mc.player.getInventory().main.size(); i++) {
+                for (int i = 0; i < com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size(); i++) {
                     ItemStack itemStack = b.mc.player.getInventory().getStack(i);
 
                     if (itemStack.getItem() instanceof BlockItem && b.trashItems.get().contains(itemStack.getItem()) && itemStack.getCount() > biggestCount) {
@@ -1155,7 +1156,7 @@ public class SnowHWB extends Module {
                     return;
                 }
 
-                for (int i = 0; i < b.mc.player.getInventory().main.size(); i++) {
+                for (int i = 0; i < com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size(); i++) {
                     if (i == skipSlot) continue;
 
                     ItemStack itemStack = b.mc.player.getInventory().getStack(i);
@@ -1174,7 +1175,7 @@ public class SnowHWB extends Module {
                                 eject = false;
                                 break;
                             }
-                            if (stack.getItem() instanceof PickaxeItem) {
+                            if (com.example.addon.utils.Compat.isPickaxe(stack)) {
                                 eject = false;
                                 break;
                             }
@@ -1237,7 +1238,7 @@ public class SnowHWB extends Module {
                 }
 
                 int emptySlots = 0;
-                for (int i = 0; i < b.mc.player.getInventory().main.size(); i++) {
+                for (int i = 0; i < com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size(); i++) {
                     if (b.mc.player.getInventory().getStack(i).isEmpty()) emptySlots++;
                 }
 
@@ -1285,7 +1286,7 @@ public class SnowHWB extends Module {
                     }
                 }
 
-                for (int i = 0; i < b.mc.player.getInventory().main.size(); i++) {
+                for (int i = 0; i < com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size(); i++) {
                     ItemStack itemStack = b.mc.player.getInventory().getStack(i);
                     if (itemStack.getItem() == Items.OBSIDIAN) obsidianCount += itemStack.getCount();
                 }
@@ -1366,7 +1367,7 @@ public class SnowHWB extends Module {
                         return;
                     }
 
-                    if (countItem(b, stack -> stack.getItem() instanceof PickaxeItem) <= b.savePickaxes.get()) {
+                    if (countItem(b, stack -> com.example.addon.utils.Compat.isPickaxe(stack)) <= b.savePickaxes.get()) {
                         if (b.searchEnderChest.get() || b.searchShulkers.get()) {
                             b.restockTask.setPickaxes();
                         }
@@ -1433,7 +1434,7 @@ public class SnowHWB extends Module {
                                     break;
                                 }
                             }
-                            if (b.restockTask.pickaxes && stack.getItem() instanceof PickaxeItem) {
+                            if (b.restockTask.pickaxes && com.example.addon.utils.Compat.isPickaxe(stack)) {
                                 stop = false;
                                 break;
                             }
@@ -1456,7 +1457,7 @@ public class SnowHWB extends Module {
                 if (slot == -1) {
                     boolean restockOccurred = (
                         (b.restockTask.materials && (hasItem(b, stack -> stack.getItem() instanceof BlockItem bi && b.blocksToPlace.get().contains(bi.getBlock())) || b.blocksToPlace.get().contains(Blocks.OBSIDIAN) && countItem(b, itemStack -> itemStack.getItem() == Items.ENDER_CHEST) > b.saveEchests.get())) ||
-                            (b.restockTask.pickaxes && countItem(b, itemStack -> itemStack.getItem() instanceof PickaxeItem) > b.savePickaxes.get()) ||
+                            (b.restockTask.pickaxes && countItem(b, itemStack -> com.example.addon.utils.Compat.isPickaxe(itemStack)) > b.savePickaxes.get()) ||
                             (b.restockTask.food && hasItem(b, itemStack -> itemStack.contains(DataComponentTypes.FOOD) && !Modules.get().get(AutoEat.class).blacklist.get().contains(itemStack.getItem())))
                     );
 
@@ -1468,7 +1469,7 @@ public class SnowHWB extends Module {
                 }
 
                 int restockSlots = -b.minEmpty.get();
-                for (int i = 0; i < b.mc.player.getInventory().main.size(); i++) {
+                for (int i = 0; i < com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size(); i++) {
                     if (b.mc.player.getInventory().getStack(i).isEmpty()) restockSlots++;
                 }
 
@@ -1530,7 +1531,7 @@ public class SnowHWB extends Module {
                     slotsPulled += countSlots(b, itemStack -> itemStack.getItem() instanceof BlockItem bi && b.blocksToPlace.get().contains(bi.getBlock()));
                     if (b.blocksToPlace.get().contains(Blocks.OBSIDIAN)) slotsPulled += ((countItem(b, itemStack -> itemStack.getItem() == Items.ENDER_CHEST) - b.saveEchests.get()) * 8) / 64;
                 }
-                if (b.restockTask.pickaxes) slotsPulled += countSlots(b, itemStack -> itemStack.getItem() instanceof PickaxeItem) - b.savePickaxes.get();
+                if (b.restockTask.pickaxes) slotsPulled += countSlots(b, itemStack -> com.example.addon.utils.Compat.isPickaxe(itemStack)) - b.savePickaxes.get();
                 if (b.restockTask.food) slotsPulled += countSlots(b, itemStack -> itemStack.contains(DataComponentTypes.FOOD) && !Modules.get().get(AutoEat.class).blacklist.get().contains(itemStack.getItem()));
 
 
@@ -1644,7 +1645,7 @@ public class SnowHWB extends Module {
                     }
                 }
                 if (b.restockTask.pickaxes) {
-                    if (grabFromInventory(inv, itemStack -> itemStack.getItem() instanceof PickaxeItem)) return true;
+                    if (grabFromInventory(inv, itemStack -> com.example.addon.utils.Compat.isPickaxe(itemStack))) return true;
                 }
                 if (b.restockTask.food) {
                     return grabFromInventory(inv, itemStack -> itemStack.contains(DataComponentTypes.FOOD) && !Modules.get().get(AutoEat.class).blacklist.get().contains(itemStack.getItem()));
@@ -1674,7 +1675,7 @@ public class SnowHWB extends Module {
                         if (b.restockTask.materials && stack.getItem() instanceof BlockItem bi) {
                             if (b.blocksToPlace.get().contains(bi.getBlock()) || (b.blocksToPlace.get().contains(Blocks.OBSIDIAN) && bi == Items.ENDER_CHEST)) return true;
                         }
-                        if (b.restockTask.pickaxes && stack.getItem() instanceof PickaxeItem) return true;
+                        if (b.restockTask.pickaxes && com.example.addon.utils.Compat.isPickaxe(stack)) return true;
                         if (b.restockTask.food && stack.contains(DataComponentTypes.FOOD) && !Modules.get().get(AutoEat.class).blacklist.get().contains(stack.getItem())) return true;
                     }
 
@@ -1705,7 +1706,7 @@ public class SnowHWB extends Module {
 
             private int countSlots(SnowHWB b, Predicate<ItemStack> predicate) {
                 int count = 0;
-                for (int i = 0; i < b.mc.player.getInventory().main.size(); i++) {
+                for (int i = 0; i < com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size(); i++) {
                     ItemStack stack = b.mc.player.getInventory().getStack(i);
                     if (predicate.test(stack)) count++;
                 }
@@ -1858,7 +1859,7 @@ public class SnowHWB extends Module {
                 float velocity = BowItem.getPullProgress(b.mc.player.getItemUseTime());
 
                 // Positions
-                Vec3d pos = target.getPos();
+                Vec3d pos = com.example.addon.utils.Compat.getPos(target);
 
                 double relativeX = pos.x - b.mc.player.getX();
                 double relativeY = pos.y + 0.5 - b.mc.player.getEyeY(); // aiming a little bit above the bottom of the crystal, hopefully prevents shooting the floor or failing the raytrace check
@@ -2018,7 +2019,7 @@ public class SnowHWB extends Module {
         }
 
         private int findSlot(SnowHWB b, Predicate<ItemStack> predicate, boolean hotbar) {
-            for (int i = hotbar ? 0 : 9; i < (hotbar ? 9 : b.mc.player.getInventory().main.size()); i++) {
+            for (int i = hotbar ? 0 : 9; i < (hotbar ? 9 : com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size()); i++) {
                 if (predicate.test(b.mc.player.getInventory().getStack(i))) return i;
             }
 
@@ -2067,7 +2068,7 @@ public class SnowHWB extends Module {
         }
 
         protected boolean hasItem(SnowHWB b, Predicate<ItemStack> predicate) {
-            for (int i = 0; i < b.mc.player.getInventory().main.size(); i++) {
+            for (int i = 0; i < com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size(); i++) {
                 if (predicate.test(b.mc.player.getInventory().getStack(i))) return true;
             }
 
@@ -2076,7 +2077,7 @@ public class SnowHWB extends Module {
 
         protected int countItem(SnowHWB b, Predicate<ItemStack> predicate) {
             int count = 0;
-            for (int i = 0; i < b.mc.player.getInventory().main.size(); i++) {
+            for (int i = 0; i < com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size(); i++) {
                 ItemStack stack = b.mc.player.getInventory().getStack(i);
                 if (predicate.test(stack)) count += stack.getCount();
             }
@@ -2108,13 +2109,13 @@ public class SnowHWB extends Module {
 
         protected int findAndMoveBestToolToHotbar(SnowHWB b, BlockState blockState, boolean noSilkTouch) {
             // Check for creative
-            if (b.mc.player.isCreative()) return b.mc.player.getInventory().selectedSlot;
+            if (b.mc.player.isCreative()) return com.example.addon.utils.Compat.getSelectedSlot(b.mc.player.getInventory());
 
             // Find best tool
             double bestScore = -1;
             int bestSlot = -1;
 
-            for (int i = 0; i < b.mc.player.getInventory().main.size(); i++) {
+            for (int i = 0; i < com.example.addon.utils.Compat.getMain(b.mc.player.getInventory()).size(); i++) {
                 double score = AutoTool.getScore(b.mc.player.getInventory().getStack(i), blockState, false, false, AutoTool.EnchantPreference.None, itemStack -> {
                     if (noSilkTouch && Utils.hasEnchantment(itemStack, Enchantments.SILK_TOUCH)) return false;
                     return !b.dontBreakTools.get() || itemStack.getMaxDamage() - itemStack.getDamage() > (itemStack.getMaxDamage() * (b.breakDurability.get() / 100));
@@ -2126,11 +2127,11 @@ public class SnowHWB extends Module {
                 }
             }
 
-            if (bestSlot == -1) return b.mc.player.getInventory().selectedSlot;
+            if (bestSlot == -1) return com.example.addon.utils.Compat.getSelectedSlot(b.mc.player.getInventory());
 
             ItemStack bestStack = b.mc.player.getInventory().getStack(bestSlot);
-            if (bestStack.getItem() instanceof PickaxeItem) {
-                int count = countItem(b, stack -> stack.getItem() instanceof PickaxeItem);
+            if (com.example.addon.utils.Compat.isPickaxe(bestStack)) {
+                int count = countItem(b, stack -> com.example.addon.utils.Compat.isPickaxe(stack));
 
                 // If we are in the process of restocking pickaxes and happen to need one, we should allow using it
                 // as long as it has enough durability, since we will obtain more shortly thereafter
@@ -2858,7 +2859,7 @@ public class SnowHWB extends Module {
         }
 
         public double progress() {
-            int slot = b.mc.player.getInventory().selectedSlot;
+            int slot = com.example.addon.utils.Compat.getSelectedSlot(b.mc.player.getInventory());
             return BlockUtils.getBreakDelta(slot , blockState) * ((b.mc.player.age - (packet ? packetStartTime : normalStartTime)) + 1);
         }
 
@@ -2931,3 +2932,6 @@ public class SnowHWB extends Module {
         }
     }
 }
+
+
+

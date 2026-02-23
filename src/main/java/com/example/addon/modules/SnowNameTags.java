@@ -2,158 +2,171 @@ package com.example.addon.modules;
 
 import com.example.addon.AddonTemplate;
 import meteordevelopment.meteorclient.events.render.Render2DEvent;
-import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.meteorclient.renderer.Renderer2D;
 import meteordevelopment.meteorclient.renderer.text.TextRenderer;
 import meteordevelopment.meteorclient.settings.*;
-import meteordevelopment.meteorclient.systems.config.Config;
+import meteordevelopment.meteorclient.systems.friends.Friends;
 import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.meteorclient.systems.modules.Modules;
-import meteordevelopment.meteorclient.systems.modules.misc.NameProtect;
-import meteordevelopment.meteorclient.renderer.Renderer2D;
-import meteordevelopment.meteorclient.utils.Utils;
-import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 import meteordevelopment.meteorclient.utils.render.NametagUtils;
 import meteordevelopment.meteorclient.utils.render.color.Color;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.orbit.EventHandler;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3d;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class SnowNameTags extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup sgPlayers = settings.createGroup("Players");
-    private final SettingGroup sgRender = settings.createGroup("Render");
-    private final Setting<SettingColor> nameColor = sgRender.add(((ColorSetting.Builder)((ColorSetting.Builder)(new ColorSetting.Builder())
-        .name("name-color"))
-        .description("The color of the nametag names."))
-        .defaultValue(new SettingColor())
-        .build()
-    );
+    private final SettingGroup sgScale = settings.createGroup("Scaling");
+    private final SettingGroup sgVisual = settings.createGroup("Visual");
 
-    private final Color RED = new Color(255, 25, 25);
-    private final Color GREEN = new Color(25, 255, 25);
-    private final Color AMBER = new Color(255, 105, 25);
-    private final Color background = new Color(50, 50, 50, 255);
-
-    private final Setting<Double> scale = sgGeneral.add(new DoubleSetting.Builder()
-        .name("Scale")
-        .defaultValue(1F)
-        .build()
-    );
-
-    private final List<Entity> entityList = new ArrayList<Entity>();
-    private final Setting<Boolean> culling = sgGeneral.add(new BoolSetting.Builder()
-        .name("Culling")
+    // IMPORTANT: used by the mixin
+    public final Setting<Boolean> hideVanilla = sgGeneral.add(new BoolSetting.Builder()
+        .name("hide-vanilla")
+        .description("Hides Minecraft's default nameplates while this module is active.")
         .defaultValue(true)
         .build()
     );
 
-    private final Setting<Integer> maxCullCount = sgGeneral.add(new IntSetting.Builder()
-        .name("Max Cull Count")
-        .defaultValue(20)
+    private final Setting<Boolean> animated = sgGeneral.add(new BoolSetting.Builder().name("animated").defaultValue(true).build());
+    private final Setting<Boolean> glow = sgGeneral.add(new BoolSetting.Builder().name("glow").defaultValue(true).build());
+    private final Setting<Boolean> healthBar = sgGeneral.add(new BoolSetting.Builder().name("health-bar").defaultValue(true).build());
+    private final Setting<Boolean> distance = sgGeneral.add(new BoolSetting.Builder().name("distance").defaultValue(true).build());
+    private final Setting<Boolean> ping = sgGeneral.add(new BoolSetting.Builder().name("ping").defaultValue(false).build());
+
+    private final Setting<Double> scale = sgScale.add(new DoubleSetting.Builder().name("scale").defaultValue(1.0).min(0.5).sliderMax(3).build());
+    private final Setting<Boolean> distanceScale = sgScale.add(new BoolSetting.Builder().name("distance-scale").defaultValue(true).build());
+    private final Setting<Double> minScale = sgScale.add(new DoubleSetting.Builder().name("min-scale").defaultValue(0.6).min(0.1).sliderMax(1).build());
+    private final Setting<Double> maxScaleDist = sgScale.add(new DoubleSetting.Builder().name("max-distance").defaultValue(50).min(1).sliderMax(200).build());
+
+    private final Setting<SettingColor> nameColor = sgVisual.add(new ColorSetting.Builder()
+        .name("name-color")
+        .defaultValue(new SettingColor(140, 200, 255, 255))
         .build()
     );
 
-    private final Setting<Boolean> displayHealth = sgPlayers.add(((BoolSetting.Builder)((BoolSetting.Builder)((BoolSetting.Builder)(new BoolSetting.Builder()).name("health")).description("Shows the player's health.")).defaultValue(true)).build());;
+    private final Setting<Double> glowAlpha = sgVisual.add(new DoubleSetting.Builder()
+        .name("glow-alpha").defaultValue(0.25).min(0).sliderMax(1.0)
+        .visible(glow::get).build()
+    );
 
-    private final Vector3d pos;
+    private final Setting<Double> glowSize = sgVisual.add(new DoubleSetting.Builder()
+        .name("glow-size").defaultValue(6).min(0).sliderMax(16)
+        .visible(glow::get).build()
+    );
 
+    private final List<PlayerEntity> players = new ArrayList<>();
+    private final Vector3d pos = new Vector3d();
 
     public SnowNameTags() {
-        super(AddonTemplate.CATEGORY, "Snow Name Tags", "clarity nametag fr");
-        this.pos = new Vector3d();
-    }
-
-    private int getRenderCount() {
-        int count = (Boolean)this.culling.get() ? (Integer)this.maxCullCount.get() : this.entityList.size();
-        count = MathHelper.clamp(count, 0, this.entityList.size());
-        return count;
-    }
-
-    @EventHandler
-    private void onTick(TickEvent.Post event) {
-        this.entityList.clear();
-        Vec3d cameraPos = this.mc.gameRenderer.getCamera().getPos();
-
-        assert this.mc.world !=
-            null;
-        for (Entity entity : this.mc.world.getEntities())
-            if (entity instanceof PlayerEntity && entity != mc.player) {
-                this.entityList.add(entity);
-            }
-
-        this.entityList.sort(Comparator.comparingDouble(e -> e.squaredDistanceTo(cameraPos)));
-    }
-
-    private void drawBg(double x, double y, double width, double height) {
-        Renderer2D.COLOR.begin();
-        Renderer2D.COLOR.quad(x - (double)1.0F, y - (double)1.0F, width + (double)2.0F, height + (double)2.0F, (Color)background);
-        Renderer2D.COLOR.quad(x, y, width, height, new Color(30, 30, 30, 255));
-        Renderer2D.COLOR.quad(x, y - 2, width, 2, new Color(177, 205, 255, 255));
-        Renderer2D.COLOR.render((MatrixStack)null);
-
-    }
-
-    private void renderNametagPlayer(Render2DEvent event, PlayerEntity player, boolean shadow) {
-        TextRenderer text = TextRenderer.get();
-        NametagUtils.begin(this.pos);
-        Color nameColor = PlayerUtils.getPlayerColor(player, (Color) this.nameColor.get());
-        String name = player == this.mc.player ? ((NameProtect) Modules.get().get(NameProtect.class)).getName(player.getName().getString()) : player.getName().getString();
-        float absorption = player.getAbsorptionAmount();
-        int health = Math.round(player.getHealth() + absorption);
-        double healthPercentage = (double) health / (player.getMaxHealth() + absorption);
-        String healthText = " " + health;
-        Color healthColor = healthPercentage <= 0.333 ? this.RED : (healthPercentage <= 0.666 ? this.AMBER : this.GREEN);
-        double nameWidth = text.getWidth(name, shadow);
-        double healthWidth = text.getWidth(healthText, shadow);
-        double width = nameWidth + ((Boolean) this.displayHealth.get() ? healthWidth : 0);
-        double widthHalf = width / 2.0;
-        double height = text.getHeight(shadow);
-        text.beginBig();
-        double hX = -widthHalf;
-        double hY = -height;
-        double heightDown = text.getHeight(shadow);
-        drawBg(-widthHalf, -heightDown, width, heightDown);
-        hX = text.render(name, hX, hY, nameColor, shadow);
-        if ((Boolean) this.displayHealth.get()) {
-            text.render(healthText, hX, hY, healthColor, shadow);
-        }
-        text.end();
-        NametagUtils.end();
-    }
-
-
-    private double getHeight(Entity entity) {
-        double height = (double)entity.getEyeHeight(entity.getPose());
-        if (entity.getType() != EntityType.ITEM && entity.getType() != EntityType.ITEM_FRAME) {
-            height += (double)0.5F;
-        } else {
-            height += 0.2;
-        }
-
-        return height;
+        super(AddonTemplate.CATEGORY, "Dookinqq Name Tags", "Custom nametags with glow + bars.");
     }
 
     @EventHandler
     private void onRender2D(Render2DEvent event) {
-        int count = this.getRenderCount();
-        boolean shadow = (Boolean) Config.get().customFont.get();
-        for(int i = count - 1; i > -1; --i) {
-            Entity entity = (Entity)this.entityList.get(i);
-            Utils.set(this.pos, entity, (double)event.tickDelta);
-            this.pos.add((double)0.0F, this.getHeight(entity), (double)0.0F);
-            EntityType<?> type = entity.getType();
-            if (!NametagUtils.to2D(this.pos, (Double)this.scale.get())) continue;
-            if (type == EntityType.PLAYER) {
-                this.renderNametagPlayer(event, (PlayerEntity)entity, shadow);
+        if (mc.world == null || mc.player == null) return;
+
+        players.clear();
+        for (PlayerEntity p : mc.world.getPlayers()) {
+            if (p != mc.player && !p.isRemoved()) players.add(p);
+        }
+        players.sort(Comparator.comparingDouble(p -> -mc.player.distanceTo(p)));
+
+        TextRenderer text = TextRenderer.get();
+        double time = System.currentTimeMillis() / 500.0;
+
+        for (PlayerEntity player : players) {
+            double x = MathHelper.lerp(event.tickDelta, player.lastRenderX, player.getX());
+            double y = MathHelper.lerp(event.tickDelta, player.lastRenderY, player.getY());
+            double z = MathHelper.lerp(event.tickDelta, player.lastRenderZ, player.getZ());
+
+            pos.set(x, y + player.getEyeHeight(player.getPose()) + 0.6, z);
+
+            double dist = mc.player.distanceTo(player);
+            double finalScale = scale.get();
+
+            if (distanceScale.get()) {
+                double factor = 1 - MathHelper.clamp(dist / maxScaleDist.get(), 0, 1);
+                finalScale *= (minScale.get() + (1 - minScale.get()) * factor);
             }
+
+            if (!NametagUtils.to2D(pos, finalScale)) continue;
+
+            NametagUtils.begin(pos, event.drawContext);
+            text.beginBig();
+
+            String name = player.getName().getString();
+            if (Friends.get().isFriend(player)) name = "§b[F] §r" + name;
+
+            double width = text.getWidth(name, true);
+            double height = text.getHeight(true);
+            double drawX = -width / 2;
+            double drawY = -height;
+
+            SettingColor sc = nameColor.get();
+            Color base = new Color(sc.r, sc.g, sc.b, sc.a);
+
+            if (animated.get()) {
+                double pulse = (Math.sin(time + player.getId() * 0.7) * 0.5 + 0.5);
+                base = new Color(base.r, base.g, base.b, (int) (180 + 75 * pulse));
+            }
+
+            if (glow.get()) {
+                double gs = glowSize.get();
+                int ga = (int) (255 * glowAlpha.get());
+                Color glowC = new Color(base.r, base.g, base.b, ga);
+
+                Renderer2D.COLOR.begin();
+                Renderer2D.COLOR.quad(drawX - gs, drawY - gs, width + gs * 2, height + gs * 2, glowC);
+                Renderer2D.COLOR.render();
+
+                text.render(name, drawX + 1, drawY, new Color(base.r, base.g, base.b, 90), true);
+                text.render(name, drawX - 1, drawY, new Color(base.r, base.g, base.b, 90), true);
+                text.render(name, drawX, drawY + 1, new Color(base.r, base.g, base.b, 90), true);
+                text.render(name, drawX, drawY - 1, new Color(base.r, base.g, base.b, 90), true);
+            }
+
+            text.render(name, drawX, drawY, base, true);
+
+            if (healthBar.get()) {
+                float hp = player.getHealth();
+                float max = Math.max(1f, player.getMaxHealth());
+                float pct = MathHelper.clamp(hp / max, 0f, 1f);
+
+                double barY = drawY + height + 2;
+                double barW = width;
+
+                int rr = (int) ((1 - pct) * 255);
+                int gg = (int) (pct * 255);
+
+                Renderer2D.COLOR.begin();
+                Renderer2D.COLOR.quad(drawX, barY, barW, 2, new Color(20, 20, 20, 180));
+                Renderer2D.COLOR.quad(drawX, barY, barW * pct, 2, new Color(rr, gg, 0, 220));
+                Renderer2D.COLOR.render();
+            }
+
+            double offset = drawX + width;
+
+            if (distance.get()) {
+                String d = String.format(" %.0fm", dist);
+                text.render(d, offset, drawY, base, true);
+                offset += text.getWidth(d, true);
+            }
+
+            if (ping.get() && mc.getNetworkHandler() != null) {
+                var entry = mc.getNetworkHandler().getPlayerListEntry(player.getUuid());
+                if (entry != null) {
+                    String pingText = " " + entry.getLatency() + "ms";
+                    text.render(pingText, offset, drawY, base, true);
+                }
+            }
+
+            text.end();
+            NametagUtils.end(event.drawContext);
         }
     }
-
 }

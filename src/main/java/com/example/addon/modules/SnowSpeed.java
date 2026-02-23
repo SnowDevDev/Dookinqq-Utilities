@@ -15,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 public class SnowSpeed extends Module {
 
     public SnowSpeed() {
-        super(AddonTemplate.CATEGORY, "Snow Speed", "Accelerates your walking speed.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Speed", "Accelerates your walking speed.");
     }
 
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -120,8 +120,8 @@ public class SnowSpeed extends Module {
     private void onTick(TickEvent.Pre event) {
         if (mc.player == null) return;
 
-        double dx = mc.player.getX() - mc.player.prevX;
-        double dz = mc.player.getZ() - mc.player.prevZ;
+        double dx = mc.player.getX() - com.example.addon.utils.Compat.getPrevX(mc.player);
+        double dz = mc.player.getZ() - com.example.addon.utils.Compat.getPrevZ(mc.player);
         lastDistance = Math.sqrt(dx * dx + dz * dz);
 
         if (mode.get() == Mode.NcpStrafe && shouldWork()) {
@@ -229,3 +229,5 @@ public class SnowSpeed extends Module {
         ncpSpeed = NCP_BASE_SPEED;
     }
 }
+
+

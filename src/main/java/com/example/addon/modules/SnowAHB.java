@@ -26,7 +26,7 @@ public class SnowAHB extends Module {
     );
 
     public SnowAHB() {
-        super(AddonTemplate.CATEGORY, "Snow AHB", "Reduces hunger depletion during activities.");
+        super(AddonTemplate.CATEGORY, "Dookinqq AHB", "Reduces hunger depletion during activities.");
     }
 
     @EventHandler
@@ -43,3 +43,6 @@ public class SnowAHB extends Module {
         }
     }
 }
+
+
+

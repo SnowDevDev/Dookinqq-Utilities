@@ -27,7 +27,7 @@ public class SnowMiner extends Module {
     private boolean sendingQuiet = false;
 
     public SnowMiner() {
-        super(AddonTemplate.CATEGORY, "Snow Miner", "Manipulates mining sequence to fix AutoMine breaks.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Miner", "Manipulates mining sequence to fix AutoMine breaks.");
     }
 
     @EventHandler
@@ -61,3 +61,5 @@ public class SnowMiner extends Module {
         }
     }
 }
+
+

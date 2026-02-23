@@ -34,7 +34,7 @@ public class SnowCrash extends Module {
 
 
     public SnowCrash() {
-        super(AddonTemplate.CATEGORY, "Snow Crash", "Allows you to crash 1.21.4 servers with a bundle. (Dumpers United again)");
+        super(AddonTemplate.CATEGORY, "Dookinqq Crash", "Allows you to crash 1.21.4 servers with a bundle. (Dumpers United again)");
     }
 
     @Override
@@ -47,10 +47,10 @@ public class SnowCrash extends Module {
             toggle();
             return;
         }
-        ItemStack probablyBundle = mc.player.getInventory().getStack(mc.player.getInventory().selectedSlot);
+        ItemStack probablyBundle = mc.player.getInventory().getStack(com.example.addon.utils.Compat.getSelectedSlot(mc.player.getInventory()));
         if (probablyBundle.getRegistryEntry().getIdAsString().contains("bundle")) {
             ChatUtils.info("Sending Packets...");
-            doCrash(mc.player.getInventory().selectedSlot);
+            doCrash(com.example.addon.utils.Compat.getSelectedSlot(mc.player.getInventory()));
         }
         else {
             ChatUtils.error("You need to be holding a bundle!");
@@ -68,3 +68,6 @@ public class SnowCrash extends Module {
 
 
 }
+
+
+

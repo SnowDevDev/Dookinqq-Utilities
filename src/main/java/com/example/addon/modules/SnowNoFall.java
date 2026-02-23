@@ -6,14 +6,13 @@ import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
-
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.math.Vec3d;
 
 public class SnowNoFall extends Module {
 
     public SnowNoFall() {
-        super(AddonTemplate.CATEGORY, "Snow No Fall", "Grim / 2b2t NoFall bypass.");
+        super(AddonTemplate.CATEGORY, "Dookinqq No Fall", "Grim / 2b2t NoFall bypass.");
     }
 
     // --------------------------------------------------
@@ -27,10 +26,11 @@ public class SnowNoFall extends Module {
 
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
-        .name("mode")
-        .defaultValue(Mode.Grim2b2t)
-        .build()
+    private final Setting<Mode> mode = sgGeneral.add(
+        new EnumSetting.Builder<Mode>()
+            .name("mode")
+            .defaultValue(Mode.Grim2b2t)
+            .build()
     );
 
     private boolean waitingForGround = false;
@@ -41,7 +41,7 @@ public class SnowNoFall extends Module {
     }
 
     // --------------------------------------------------
-    // JumpSpoof Mode (your Snow method)
+    // JumpSpoof Mode
     // --------------------------------------------------
 
     @EventHandler
@@ -61,23 +61,20 @@ public class SnowNoFall extends Module {
                     mc.player.horizontalCollision
                 )
             );
-
             waitingForGround = false;
         }
     }
 
     // --------------------------------------------------
-    // Grim2b2t Mode (Lambda idea but fixed)
+    // Grim2b2t Mode
     // --------------------------------------------------
 
     @EventHandler
     private void onMove(PlayerMoveEvent event) {
         if (mc.player == null) return;
         if (mode.get() != Mode.Grim2b2t) return;
-
         if (mc.player.fallDistance < 3.0f) return;
 
-        // Small Y offset spoof
         double x = mc.player.getX();
         double y = mc.player.getY();
         double z = mc.player.getZ();
@@ -89,12 +86,11 @@ public class SnowNoFall extends Module {
                 z,
                 mc.player.getYaw(),
                 mc.player.getPitch(),
-                true, // onGround spoof
+                true,
                 mc.player.horizontalCollision
             )
         );
 
-        // Stop vertical motion to prevent real damage calc
         mc.player.setVelocity(
             mc.player.getVelocity().x,
             0,
@@ -104,3 +100,5 @@ public class SnowNoFall extends Module {
         mc.player.fallDistance = 0;
     }
 }
+
+

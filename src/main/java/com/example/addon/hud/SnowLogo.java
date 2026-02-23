@@ -1,9 +1,9 @@
 package com.example.addon.hud;
 
 import com.example.addon.AddonTemplate;
-import meteordevelopment.meteorclient.renderer.GL;
-import meteordevelopment.meteorclient.renderer.Renderer2D;
-import meteordevelopment.meteorclient.settings.*;
+import meteordevelopment.meteorclient.settings.DoubleSetting;
+import meteordevelopment.meteorclient.settings.Setting;
+import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.hud.HudElement;
 import meteordevelopment.meteorclient.systems.hud.HudElementInfo;
 import meteordevelopment.meteorclient.systems.hud.HudRenderer;
@@ -11,35 +11,53 @@ import meteordevelopment.meteorclient.utils.render.color.Color;
 import net.minecraft.util.Identifier;
 
 public class SnowLogo extends HudElement {
-    public static final HudElementInfo<SnowLogo> INFO = new HudElementInfo<>(AddonTemplate.HUD_GROUP, "Snow Logo", "Snow Logo type shi", SnowLogo::new);
+    public static final HudElementInfo<SnowLogo> INFO = new HudElementInfo<>(
+        AddonTemplate.HUD_GROUP, "Dookinqq Logo", "Displays the mod icon with text using a custom font.", SnowLogo::new
+    );
 
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<Double> scale = sgGeneral.add(new DoubleSetting.Builder()
-            .name("scale")
-            .description("The scale of the Logo.")
-            .defaultValue(3)
-            .min(0.1)
-            .sliderRange(0.1, 10)
-            .build()
+        .name("scale")
+        .description("Scale of the logo and banner.")
+        .defaultValue(1.0)
+        .min(0.1)
+        .max(5.0)
+        .sliderMin(0.1)
+        .sliderMax(5.0)
+        .build()
     );
+
+    private static final Identifier LOGO = Identifier.of("template", "icon.png");
+private static final Identifier BANNER = Identifier.of("template", "banner.png");
 
     public SnowLogo() {
         super(INFO);
     }
 
-    private final Identifier TEXTURE = Identifier.of("snow-utilities", "textures/icon.png");
-
-    @Override
-    public void tick(HudRenderer renderer) {
-        box.setSize(64 * scale.get(), 64 * scale.get());
-    }
-
     @Override
     public void render(HudRenderer renderer) {
-        GL.bindTexture(TEXTURE);
-        Renderer2D.TEXTURE.begin();
-        Renderer2D.TEXTURE.texQuad(this.x, this.y, this.getWidth(), this.getHeight(), Color.WHITE);
-        Renderer2D.TEXTURE.render(null);
+        double baseLogoSize = 64;
+        double baseBannerHeight = baseLogoSize * 0.75;
+        double baseBannerWidth = baseBannerHeight * 4;
+        double basePadding = 6;
+
+        double scaledLogoSize = baseLogoSize * scale.get();
+        double scaledBannerHeight = baseBannerHeight * scale.get();
+        double scaledBannerWidth = baseBannerWidth * scale.get();
+        double scaledPadding = basePadding * scale.get();
+
+        setSize(scaledLogoSize + scaledPadding + scaledBannerWidth, Math.max(scaledLogoSize, scaledBannerHeight));
+        renderer.texture(LOGO, x, y, scaledLogoSize, scaledLogoSize, Color.WHITE);
+        renderer.texture(
+            BANNER,
+            x + scaledLogoSize + scaledPadding,
+            y + (scaledLogoSize - scaledBannerHeight) / 2,
+            scaledBannerWidth,
+            scaledBannerHeight,
+            Color.WHITE
+        );
     }
 }
+
+

@@ -15,7 +15,7 @@ import java.util.*;
 
 public class SnowDM extends Module {
     public SnowDM() {
-        super(AddonTemplate.CATEGORY, "Snow DM", "Notifies you when someone receives a private message.");
+        super(AddonTemplate.CATEGORY, "Dookinqq DM", "Notifies you when someone receives a private message.");
     }
 
     private static final Multimap<ByteBuffer, UUID> signatures = MultimapBuilder.hashKeys().hashSetValues().build();
@@ -62,3 +62,6 @@ public class SnowDM extends Module {
         hasSentFirstAlert = true;
     }
 }
+
+
+

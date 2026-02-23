@@ -99,7 +99,7 @@ public class SnowSoundFinder extends Module {
     private final List<SoundRecord> soundRecords = new CopyOnWriteArrayList<>();
 
     public SnowSoundFinder() {
-        super(AddonTemplate.CATEGORY, "Snow Sound Finder", "Prints locations of sound events.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Sound Finder", "Prints locations of sound events.");
     }
 
     @Override
@@ -202,3 +202,5 @@ public class SnowSoundFinder extends Module {
         }
     }
 }
+
+

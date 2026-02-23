@@ -1,7 +1,6 @@
 //Skidded from Germanminer with their permission! Thank you for making this.
 package com.example.addon.modules;
 
-import meteordevelopment.meteorclient.events.meteor.MouseButtonEvent;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
@@ -84,7 +83,7 @@ public class SnowAutoWither extends Module {
             .build()
     );
     public SnowAutoWither() {
-        super(AddonTemplate.CATEGORY, "Snow Auto Wither", "Automatically builds a wither.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Auto Wither", "Automatically builds a wither.");
     }
 
     private BlockPos previewPos;
@@ -119,12 +118,12 @@ public class SnowAutoWither extends Module {
         }
     }
     @EventHandler
-    private void onMouseButton(MouseButtonEvent event){
+    private void onMouseButton(Object event){
         if(mc.currentScreen != null) return;//Stop working in GUI
-        if(event.button != GLFW.GLFW_MOUSE_BUTTON_RIGHT) return;
+        if(com.example.addon.utils.EventCompat.getButton(event) != GLFW.GLFW_MOUSE_BUTTON_RIGHT) return;
         if (isBuilding) return;
-        if(event.action == KeyAction.Press){
-            event.cancel();
+        if(com.example.addon.utils.EventCompat.isPress(event)){
+            com.example.addon.utils.EventCompat.cancel(event);
             if(!hasMaterials){
                 info("You don't have the required materials to build a wither in your hotbar");
                 return;
@@ -201,7 +200,7 @@ public class SnowAutoWither extends Module {
             return;
         }
         assert mc.player != null;
-        int originalSlot = mc.player.getInventory().selectedSlot;
+        int originalSlot = com.example.addon.utils.Compat.getSelectedSlot(mc.player.getInventory());
         Direction direction;
         if(lockRotation.get()){
             direction = chosenDirection.get().toMcDirection();
@@ -385,3 +384,5 @@ public class SnowAutoWither extends Module {
         }
     }
 }
+
+

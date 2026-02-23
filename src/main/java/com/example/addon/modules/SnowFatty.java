@@ -34,7 +34,7 @@ public class SnowFatty extends Module {
     BlockPos pos = null;
 
     public SnowFatty() {
-        super(AddonTemplate.CATEGORY, "Snow Fatty", "Sucks up all items on the ground.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Fatty", "Sucks up all items on the ground.");
     }
 
     //clear pos
@@ -53,7 +53,7 @@ public class SnowFatty extends Module {
         List<Entity> entities = new ArrayList<>(StreamSupport.stream(mc.world.getEntities().spliterator(), true)
             .filter(entity -> entity instanceof ItemEntity)
             .filter(entity -> entity.distanceTo(mc.player) <= range.get())
-            .filter(entity -> Utils.isABFree(mc.player.getPos(), entity.getPos()))
+            .filter(entity -> Utils.isABFree(com.example.addon.utils.Compat.getPos(mc.player), com.example.addon.utils.Compat.getPos(entity)))
             .toList());
 
         if (entities.isEmpty()) return;
@@ -64,3 +64,6 @@ public class SnowFatty extends Module {
         if (closest.distanceTo(mc.player) > 1) mc.player.networkHandler.sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(closest.getX(), closest.getY(), closest.getZ(), mc.player.isOnGround(), false));
     }
 }
+
+
+

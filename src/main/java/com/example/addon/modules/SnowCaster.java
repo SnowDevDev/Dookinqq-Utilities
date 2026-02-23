@@ -1,14 +1,13 @@
 package com.example.addon.modules;
 
+import com.example.addon.AddonTemplate;
 import com.example.addon.utils.ListMode;
 import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
-import meteordevelopment.meteorclient.events.meteor.MouseButtonEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.mixininterface.IVec3d;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.misc.Keybind;
 import meteordevelopment.meteorclient.utils.misc.input.KeyAction;
@@ -36,8 +35,10 @@ public class SnowCaster extends Module {
     private final SettingGroup sgRender = settings.createGroup("Render");
 
     public SnowCaster() {
-        super(Categories.Player, "snow-caster", "Lava casting made easy.");
+        super(AddonTemplate.CATEGORY, "Dookinqq Caster", "Lava casting made easy.");
     }
 
     // --- (rest of your original SnowCaster code stays EXACTLY the same below this line) ---
 }
+
+

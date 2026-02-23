@@ -28,7 +28,7 @@ public class SnowABB extends Module {
     );
 
     public SnowABB() {
-        super(AddonTemplate.CATEGORY, "Snow ABB", "Prevents kicks/crashes by stripping data from heavy items.");
+        super(AddonTemplate.CATEGORY, "Dookinqq ABB", "Prevents kicks/crashes by stripping data from heavy items.");
     }
 
     @Override
@@ -50,3 +50,5 @@ public class SnowABB extends Module {
         }
     }
 }
+
+
